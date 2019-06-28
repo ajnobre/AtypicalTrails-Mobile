@@ -2,24 +2,13 @@ import 'dart:async';
 
 import 'package:atypical/pages/explore.dart';
 import 'package:atypical/pages/signUp.dart';
+import 'package:atypical/requests/requests.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:atypical/serverApi/serverApi.dart';
 
-part 'login.g.dart';
-
-@JsonSerializable()
-class User {
-  User(this.username, this.password);
-
-  String username;
-  String password;
-
-  factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
-
-  Map<String, dynamic> toJson() => _$UserToJson(this);
-}
 
 class LoginPage extends StatefulWidget {
   @override
@@ -46,11 +35,12 @@ class _LoginPageState extends State<LoginPage> {
 
   Future _submit(String username, String password) async {
     if (!(username.isEmpty || password.isEmpty)) {
-      User user = new User(username, password);
-      response = await loginUser(user);
+      User user = new User(username, "", password);
+      user.toJson();
+      response = await ServerApi().loginUser(user);
       if (response.statusCode == 200) {
         saveToken(response.data['msg']);
-        
+
         _isInvalidAsyncPass = false;
       } else if (response.statusCode == 403) {
         _isInvalidAsyncPass = true;
@@ -61,8 +51,7 @@ class _LoginPageState extends State<LoginPage> {
       if (_formKey.currentState.validate()) {
         Navigator.push(
           context,
-          MaterialPageRoute(
-                builder: (context) => ExplorePage()
+          MaterialPageRoute(builder: (context) => ExplorePage()
               // builder: (context) => HomePage(),
               ),
         );
@@ -78,18 +67,6 @@ class _LoginPageState extends State<LoginPage> {
   getToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.getString("token");
-  }
-
-  Future loginUser(User user) async {
-    String url = 'https://androidservertester2.appspot.com/rest/login/user';
-
-    try {
-      response = await dio.post(url, data: user.toJson());
-    } on DioError catch (e) {
-      response = e.response;
-    }
-
-    return response;
   }
 
   @override

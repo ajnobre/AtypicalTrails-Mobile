@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'package:atypical/elements/drawer.dart';
+import 'package:atypical/pages/trail.dart';
+import 'package:atypical/serverApi/serverApi.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -71,7 +73,14 @@ class _ExploreContentState extends State<ExploreContent> {
           style: _biggerFont,
         ),
       ),
-      onPressed: () {},
+      onPressed: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => TrailPage(
+                      data: trail,
+                    )));
+      },
     );
   }
 
@@ -86,26 +95,12 @@ class _ExploreContentState extends State<ExploreContent> {
     return values;
   }
 
-  Future getAllTrails(int offset) async {
-    String url =
-        'https://atypicaltrailsweb.appspot.com/rest/trails/getAllTrails';
-
-    try {
-      response = await dio.post(url, data: {"offset": offset});
-    } on DioError catch (e) {
-      response = e.response;
-    }
-
-    return response;
-  }
-
   Future _submit(int offset) async {
-    response = await getAllTrails(offset);
+    response = await ServerApi().getAllTrails(offset);
     if (response.statusCode == 200) {
       receivedList = response.data;
       return receivedList;
     }
-
   }
 
   Widget createListView(BuildContext context, AsyncSnapshot snapshot) {
@@ -114,7 +109,6 @@ class _ExploreContentState extends State<ExploreContent> {
       padding: const EdgeInsets.all(16.0),
       itemCount: trailList.length,
       itemBuilder: (context, i) {
-
         if (i >= _suggestions.length) {
           if (i < trailList.length) {
             _contents.add(trailList[i]['propertyMap']);
@@ -128,4 +122,3 @@ class _ExploreContentState extends State<ExploreContent> {
     );
   }
 }
-

@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'signUp.dart';
+part of 'requests.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
