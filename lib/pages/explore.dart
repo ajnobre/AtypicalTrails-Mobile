@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:atypical/elements/drawer.dart';
+import 'package:atypical/pages/test.dart';
 import 'package:atypical/pages/trail.dart';
 import 'package:atypical/serverApi/serverApi.dart';
 import 'package:dio/dio.dart';
@@ -77,8 +78,10 @@ class _ExploreContentState extends State<ExploreContent> {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => TrailPage(
-                      data: trail,
+                builder: (context) => Test(
+
+/*                 TrailPage(
+                      data: trail, */
                     )));
       },
     );
