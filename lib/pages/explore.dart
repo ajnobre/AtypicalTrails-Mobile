@@ -5,6 +5,7 @@ import 'package:atypical/pages/trail.dart';
 import 'package:atypical/serverApi/serverApi.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:convert/convert.dart';
 
@@ -78,7 +79,7 @@ class _ExploreContentState extends State<ExploreContent> {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => Test(
+                builder: (context) => Test(data: trail
 
 /*                 TrailPage(
                       data: trail, */

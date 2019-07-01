@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -6,6 +7,10 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 
 class Test extends StatelessWidget {
+  final Map<String, dynamic> data;
+
+  Test({this.data});
+
   @override
   Widget build(BuildContext context) {
     Widget titleSection = Container(
@@ -87,9 +92,7 @@ class Test extends StatelessWidget {
           children: [
             Flexible(
               flex: 2,
-              child: StoreMap(
-                initialPostion: const LatLng(37.776, -122.4375),
-              ),
+              child: StoreMap(markers: _getMarkers()),
             ),
 
 /*             Image.asset(
@@ -98,9 +101,19 @@ class Test extends StatelessWidget {
               height: 240,
               fit: BoxFit.cover,
             ), */
-            titleSection,
+            Flexible(
+              child: ListView(
+                children: <Widget>[
+                  titleSection,
+                  buttonSection,
+                  textSection,
+                ],
+              ),
+              flex: 3,
+            ),
+/*             titleSection,
             buttonSection,
-            textSection,
+            textSection, */
           ],
         ),
       ),
@@ -127,19 +140,35 @@ class Test extends StatelessWidget {
       ],
     );
   }
+
+  Set<Marker> _getMarkers() {
+    Set<Marker> set = Set();
+    List markerArr = json.decode('[' + data['Path']['value']['value'] + ']');
+    for (int i = 0; i < markerArr.length; i++) {
+      set.add(new Marker(
+        markerId: new MarkerId(
+          i.toString(),
+        ),
+        position: LatLng(markerArr[i]['lat'], markerArr[i]['lng']),
+      ));
+    }
+    return set;
+  }
 }
 
 class StoreMap extends StatelessWidget {
   const StoreMap({
     key,
-    @required this.initialPostion,
+    @required this.markers,
   }) : super(key: key);
+  final Set<Marker> markers;
 
-  final LatLng initialPostion;
   @override
   Widget build(BuildContext context) {
     return GoogleMap(
-      initialCameraPosition: CameraPosition(target: initialPostion, zoom: 12),
+      initialCameraPosition: CameraPosition(
+          target: markers.elementAt(markers.length ~/ 2).position, zoom: 15),
+      markers: markers,
     );
   }
 }
