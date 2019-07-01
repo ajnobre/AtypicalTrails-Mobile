@@ -79,7 +79,7 @@ class _ExploreContentState extends State<ExploreContent> {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => Test(data: trail
+                builder: (context) => Trail(data: trail
 
 /*                 TrailPage(
                       data: trail, */
