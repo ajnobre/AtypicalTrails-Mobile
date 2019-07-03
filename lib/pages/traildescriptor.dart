@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:collection';
 import 'dart:convert';
 import 'package:atypical/pages/explore.dart';
+import 'package:atypical/pages/trail.dart';
 import 'package:flutter/services.dart';
 
 import 'package:flutter/material.dart';
@@ -10,36 +11,24 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:atypical/utils/points.dart';
 
-class Trail extends StatefulWidget {
+class TrailDesc extends StatefulWidget {
   final Map<String, dynamic> data;
-  Trail({this.data});
+  TrailDesc({this.data});
   @override
-  _TrailState createState() => _TrailState();
+  _TrailDescState createState() => _TrailDescState();
 }
 
-class _TrailState extends State<Trail> {
+class _TrailDescState extends State<TrailDesc> {
   static LocationData currentLocation;
-
+  Set<Marker> markers;
+  Set<Polyline> polylines;
   var location = new Location();
   LatLng startPosition;
+  LatLng finishPosition;
   @override
   Widget build(BuildContext context) {
-    var futureBuilder = new FutureBuilder(
-      future: getLocation(),
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        switch (snapshot.connectionState) {
-          case ConnectionState.none:
-          case ConnectionState.waiting:
-          default:
-            if (snapshot.hasError)
-              return new Text('Error: ${snapshot.error}');
-            else
-              return createPage(context, snapshot);
-        }
-      },
-    );
     return new Scaffold(
-      body: futureBuilder,
+      body: createPage(context),
     );
   }
 
@@ -69,13 +58,23 @@ class _TrailState extends State<Trail> {
     Set<Polyline> polylineSet = Set();
     List markerArr =
         json.decode('[' + widget.data['Path']['value']['value'] + ']');
+
     markersSet.add(_createMarker(0, markerArr, BitmapDescriptor.hueGreen));
     startPosition = LatLng(markerArr[0]['lat'], markerArr[0]['lng']);
+
     markersSet.add(_createMarker(
         markerArr.length - 1, markerArr, BitmapDescriptor.hueRed));
+    finishPosition = LatLng(markerArr[markerArr.length - 1]['lat'],
+        markerArr[markerArr.length - 1]['lng']);
+
     for (int i = 0; i < markerArr.length - 1; i++) {
       polylineSet.add(_createPolyline(i, markerArr));
     }
+
+    setState(() {
+      markers = markersSet;
+      polylines = polylineSet;
+    });
     return [markersSet, polylineSet];
   }
 
@@ -109,7 +108,7 @@ class _TrailState extends State<Trail> {
     return res;
   }
 
-  void startButtonHandler() {
+  Future<void> startButtonHandler() async {
     location.getLocation().then((curLoc) {
       setState(() {
         currentLocation = curLoc;
@@ -119,11 +118,14 @@ class _TrailState extends State<Trail> {
           currentLocation.longitude,
           startPosition.latitude,
           startPosition.longitude);
-      if (dist < 0.05) {
+      if (dist < 0.025) {
         return Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ExplorePage(),
+            builder: (context) => MapSample(
+                  markers: markers,
+                  polylines: polylines,
+                ),
           ),
         );
       } else {
@@ -158,7 +160,7 @@ class _TrailState extends State<Trail> {
     return curLoc;
   }
 
-  Widget createPage(BuildContext context, AsyncSnapshot snapshot) {
+  Widget createPage(BuildContext context) {
     Widget titleSection = Container(
       padding: const EdgeInsets.all(24),
       child: Row(
