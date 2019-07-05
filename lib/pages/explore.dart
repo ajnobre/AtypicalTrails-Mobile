@@ -10,6 +10,8 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:convert/convert.dart';
 
 class ExplorePage extends StatefulWidget {
+  final String username;
+  ExplorePage({this.username});
   @override
   _ExplorePageState createState() => _ExplorePageState();
 }
@@ -33,6 +35,7 @@ class _ExploreContentState extends State<ExploreContent> {
   final _contents = <Map<String, dynamic>>[];
   final _biggerFont = const TextStyle(fontSize: 18.0);
   List<dynamic> receivedList;
+  ServerApi serverApi = new ServerApi();
 
   @override
   Widget build(BuildContext context) {
@@ -51,18 +54,23 @@ class _ExploreContentState extends State<ExploreContent> {
         }
       },
     );
-    return new Scaffold(
-      body: futureBuilder,
-      drawer: NavigationDrawer(),
-      appBar: AppBar(
-        backgroundColor: Colors.green,
-        title: Text('Explore'),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.add),
-            onPressed: () {},
-          )
-        ],
+    return WillPopScope(
+      onWillPop: () async {
+        return false;
+      },
+      child: new Scaffold(
+        body: futureBuilder,
+        drawer: NavigationDrawer(),
+        appBar: AppBar(
+          backgroundColor: Colors.green,
+          title: Text('Explore'),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.add),
+              onPressed: () {},
+            )
+          ],
+        ),
       ),
     );
   }
@@ -100,7 +108,7 @@ class _ExploreContentState extends State<ExploreContent> {
   }
 
   Future _submit(int offset) async {
-    response = await ServerApi().getAllTrails(offset);
+    response = await serverApi.getAllTrails(offset);
     if (response.statusCode == 200) {
       receivedList = response.data;
       return receivedList;

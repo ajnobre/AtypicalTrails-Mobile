@@ -1,9 +1,22 @@
 import 'package:atypical/pages/login.dart';
-import 'package:atypical/requests/requests.dart';
-import 'package:atypical/serverApi/serverApi.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:dio/dio.dart';
+
+part 'signUp.g.dart';
+
+@JsonSerializable()
+class User {
+  User(this.username, this.email, this.password);
+
+  String username;
+  String email;
+  String password;
+
+  factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
+
+  Map<String, dynamic> toJson() => _$UserToJson(this);
+}
 
 class SignUp extends StatefulWidget {
   @override
@@ -37,21 +50,13 @@ class _SignUpState extends State<SignUp> {
       String passwordConf, BuildContext context) async {
     if (validInfo(username, email, password, passwordConf)) {
       User user = new User(username, email, password);
-      response = await ServerApi().signUpUser(user);
+      response = await signUpUser(user);
       if (response.statusCode == 200) {
-        var alertDialog = AlertDialog(
-          title: Text("User successfully registered"),
-        );
-        showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return alertDialog;
-            });
         _isInvalidAsyncUser = false;
         _isInvalidAsyncEmail = false;
-      } else if (response.statusCode == 403) {
-        _isInvalidAsyncUser = true;
       } else if (response.statusCode == 400) {
+        _isInvalidAsyncUser = true;
+      } else if (response.statusCode == 403) {
         _isInvalidAsyncEmail = true;
       }
     }
@@ -77,6 +82,18 @@ class _SignUpState extends State<SignUp> {
         password.length < 7 ||
         (password.compareTo(passwordConf) != 0) ||
         passwordConf.isEmpty));
+  }
+
+  Future signUpUser(User user) async {
+    String url = 'https://atypicaltrailsweb.appspot.com/rest/register/v2';
+
+    try {
+      response = await dio.post(url, data: user.toJson());
+    } on DioError catch (e) {
+      response = e.response;
+    }
+
+    return response;
   }
 
   @override

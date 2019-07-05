@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-part 'requests.g.dart';
+part 'user.g.dart';
 
 @JsonSerializable()
 class User {
@@ -9,6 +9,7 @@ class User {
   String username;
   String email;
   String password;
+
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 

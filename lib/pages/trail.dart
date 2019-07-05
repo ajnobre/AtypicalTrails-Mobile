@@ -216,17 +216,23 @@ class _MapTrailState extends State<MapTrail> {
 import 'dart:async';
 
 import 'package:atypical/pages/explore.dart';
+import 'package:atypical/pages/finishedTrail.dart';
 import 'package:atypical/utils/points.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:flutter/services.dart';
 import 'package:rxdart/rxdart.dart';
+import 'dart:math';
+
+import 'package:smooth_star_rating/smooth_star_rating.dart';
 
 class MapSample extends StatefulWidget {
   final Set<Marker> markers;
   final Set<Polyline> polylines;
-  MapSample({this.markers, this.polylines});
+  final String trailKey;
+  final String username;
+  MapSample({this.markers, this.polylines, this.trailKey, this.username});
   @override
   State<MapSample> createState() => MapSampleState();
 }
@@ -243,6 +249,7 @@ class MapSampleState extends State<MapSample> {
   static LatLng startPosition, finishPosition;
   var startTime, finishTime;
   var location = new Location();
+  var dist;
   void initState() {
     super.initState();
 
@@ -291,66 +298,76 @@ class MapSampleState extends State<MapSample> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      body: Stack(
-        children: <Widget>[
-          GoogleMap(
-            mapType: MapType.hybrid,
-            initialCameraPosition: initialCameraPosition,
-            onMapCreated: (GoogleMapController controller) {
-              _controller.complete(controller);
-            },
-            myLocationEnabled: true,
-            myLocationButtonEnabled: false,
-            onCameraIdle: _animateToUser2,
-            markers: widget.markers,
-            polylines: widget.polylines,
-          ),
-          Positioned(
-            bottom: 50,
-            left: 10,
-            child: Slider(
-              min: 12,
-              max: 19,
-              divisions: 4,
-              onChanged: changeValue,
-              value: _sliderValue,
+    return WillPopScope(
+      onWillPop: () async {
+        return false;
+      },
+      child: new Scaffold(
+        body: Stack(
+          children: <Widget>[
+            GoogleMap(
+              mapType: MapType.hybrid,
+              initialCameraPosition: initialCameraPosition,
+              onMapCreated: (GoogleMapController controller) {
+                _controller.complete(controller);
+              },
+              myLocationEnabled: true,
+              myLocationButtonEnabled: false,
+              onCameraIdle: _animateToUser2,
+              markers: widget.markers,
+              polylines: widget.polylines,
             ),
-          ),
-          Positioned(
-              bottom: 45,
-              right: 10,
-              child: Container(
-                width: 130,
-                height: 53.0,
-                child: FloatingActionButton.extended(
-                  backgroundColor: Colors.red,
-                  label: Text('Finish'),
-                  onPressed: _goToTheLake,
-                ),
-              )),
-        ],
-      ),
+            Positioned(
+              bottom: 50,
+              left: 10,
+              child: Slider(
+                min: 12,
+                max: 19,
+                divisions: 4,
+                onChanged: changeValue,
+                value: _sliderValue,
+              ),
+            ),
+            Positioned(
+                bottom: 45,
+                right: 10,
+                child: Container(
+                  width: 130,
+                  height: 53.0,
+                  child: FloatingActionButton.extended(
+                    backgroundColor: Colors.red,
+                    label: Text('Finish'),
+                    onPressed: _goToTheLake,
+                  ),
+                )),
+          ],
+        ),
 /*       floatingActionButton: FloatingActionButton.extended(
-        onPressed: _goToTheLake,
-        label: Text('To the lake!'),
-        icon: Icon(Icons.directions_boat),
-      ), */
+          onPressed: _goToTheLake,
+          label: Text('To the lake!'),
+          icon: Icon(Icons.directions_boat),
+        ), */
+      ),
     );
   }
 
   Future<void> _goToTheLake() async {
-    var dist = calculateDistance(
+    dist = calculateDistance(
         currentLocation.latitude,
         currentLocation.longitude,
         finishPosition.latitude,
         finishPosition.longitude);
-    if (dist < 0.025) {
+    location.getLocation().then((recLoc) {
+      setState(() {
+        currentLocation = recLoc;
+      });
+    });
+    if (/* dist < 0.035 */ dist < 0.6) {
       _showDialogSuccess(context);
     } else {
       finishTime = new DateTime.now();
 
-      _showDialogQuit(context);
+      _showDialogQuit(context, dist);
     }
   }
 
@@ -361,7 +378,7 @@ class MapSampleState extends State<MapSample> {
     });
   }
 
-  void _showDialogQuit(context) {
+  void _showDialogQuit(context, dist) {
     // flutter defined function
     showDialog(
       context: context,
@@ -369,10 +386,12 @@ class MapSampleState extends State<MapSample> {
         // return object of type Dialog
         return AlertDialog(
           title: new Text("Not there yet"),
-          content: new Text(
-              "You haven't reached the finish point, are you sure you want to give up?"),
+          content: new Text("You are " +
+              (dist * 1000).round().toString() +
+              " meters away from the finish point, are you sure you want to give up?"),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
+
             new FlatButton(
               child: new Text("Yes"),
               onPressed: () {
@@ -397,6 +416,8 @@ class MapSampleState extends State<MapSample> {
   }
 
   void _showDialogSuccess(context) {
+    var rating = 0.0;
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -411,7 +432,24 @@ class MapSampleState extends State<MapSample> {
             new FlatButton(
               child: new Text("Close"),
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => FinishTrailPage(
+                              trailKey: widget.trailKey,
+
+/*                 TrailPage(
+                      data: trail, */
+                            )));
+/*                 
+                Navigator.pushNamedAndRemoveUntil(
+                    context, "/finishedTrail/", (_) => false); */
+/*                 Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => FinishTrailPage(),
+                  ),
+                ); */
               },
             ),
           ],

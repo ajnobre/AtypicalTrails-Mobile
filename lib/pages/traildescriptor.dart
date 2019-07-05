@@ -13,7 +13,8 @@ import 'package:atypical/utils/points.dart';
 
 class TrailDesc extends StatefulWidget {
   final Map<String, dynamic> data;
-  TrailDesc({this.data});
+  final String username;
+  TrailDesc({this.data, this.username});
   @override
   _TrailDescState createState() => _TrailDescState();
 }
@@ -118,11 +119,12 @@ class _TrailDescState extends State<TrailDesc> {
           currentLocation.longitude,
           startPosition.latitude,
           startPosition.longitude);
-      if (dist < 0.025) {
+      if (/* dist < 0.025 */ dist < 0.6) {
         return Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => MapSample(
+                  trailKey: widget.data['CodeName'],
                   markers: markers,
                   polylines: polylines,
                 ),
