@@ -22,11 +22,11 @@ class ServerApi {
   }
 
   Future getUserInfo(User user) async {
-    return post("/getInfo", user.toJson());
+    return post("login/getInfo", user.toJson());
   }
 
   Future signUpUser(User user) async {
-    return await post("register/v2", user.toJson());
+    return await post("register/android", user.toJson());
   }
 
   Future getAllTrails(int offset) async {
@@ -36,5 +36,14 @@ class ServerApi {
 
   Future addToFinished(Trail trail) async {
     return await post("user/addToFinished", trail.toJson());
+  }
+
+  Future getRanking(int offset) async {
+    Map<String, dynamic> r = {"offset": offset};
+    return await post("user/getRanking", r);
+  }
+
+  Future<Response> logout(User user) async {
+    return await post("login/logout", user.toJson());
   }
 }

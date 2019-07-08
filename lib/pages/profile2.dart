@@ -1,10 +1,8 @@
 import 'package:atypical/elements/drawer.dart';
-
 import 'package:atypical/requests/user.dart';
 import 'package:atypical/serverApi/serverApi.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -13,41 +11,36 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(body: ProfileContent());
-  }
-}
-
-class ProfileContent extends StatefulWidget {
-  @override
-  _ProfileContentState createState() => _ProfileContentState();
-}
-
-class _ProfileContentState extends State<ProfileContent> {
-  Dio dio = new Dio();
-  Response response;
-
   Map<String, dynamic> receivedList;
-  ServerApi serverApi = new ServerApi();
+
+  TextStyle _style() {
+    return TextStyle(fontWeight: FontWeight.bold, fontSize: 19.0);
+  }
+
+  TextStyle _style2() {
+    return TextStyle(fontSize: 16.0);
+  }
 
   @override
   Widget build(BuildContext context) {
-    var futureBuilder = new FutureBuilder(
-      future: _fetchData(),
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
+    var futureBuilder = new FutureBuilder<Map<String, dynamic>>(
+      future: _fetchData(), // a Future<String> or null
+      builder:
+          (BuildContext context, AsyncSnapshot<Map<String, dynamic>> snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.none:
+            return new Text('Press button to start');
           case ConnectionState.waiting:
-            return Center(child: new CircularProgressIndicator());
+            return new Text('Awaiting result...');
           default:
             if (snapshot.hasError)
               return new Text('Error: ${snapshot.error}');
             else
-              return createListView(context, snapshot);
+              return createPage(context, snapshot);
         }
       },
     );
+
     return WillPopScope(
       onWillPop: () async {
         return false;
@@ -67,6 +60,91 @@ class _ProfileContentState extends State<ProfileContent> {
         ),
       ),
     );
+    /*     if (receivedList == null) {
+                    return Center(child: CircularProgressIndicator());
+                  } else {
+                    return Scaffold(
+                      appBar: CustomAppBar(),
+                      body: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text("Name", style: _style()),
+                            SizedBox(
+                              height: 4,
+                            ),
+                            Text(
+                              "",
+                              style: _style2(),
+                            ),
+                            SizedBox(
+                              height: 16,
+                            ),
+                            Text(
+                              "Mobile",
+                              style: _style(),
+                            ),
+                            SizedBox(
+                              height: 4,
+                            ),
+                            Text(
+                              "963135249",
+                              style: _style2(),
+                            ),
+                            SizedBox(
+                              height: 16,
+                            ),
+                            Text(
+                              "Email",
+                              style: _style(),
+                            ),
+                            SizedBox(
+                              height: 4,
+                            ),
+                            Text(
+                              "octavio@hotmail.com",
+                              style: _style2(),
+                            ),
+                            SizedBox(
+                              height: 16,
+                            ),
+                            Text(
+                              "Address",
+                              style: _style(),
+                            ),
+                            SizedBox(
+                              height: 4,
+                            ),
+                            Text(
+                              "Rua da fazendinha nº16 Santa Cruz - Madeira",
+                              style: _style2(),
+                            ),
+                            SizedBox(
+                              height: 16,
+                            ),
+                            Text(
+                              "Password",
+                              style: _style(),
+                            ),
+                            SizedBox(
+                              height: 4,
+                            ),
+                            Text(
+                              "1234556789",
+                              style: _style2(),
+                            ),
+                            SizedBox(
+                              height: 16,
+                            ),
+                            Divider(
+                              color: Colors.black54,
+                            )
+                          ],
+                        ),
+                      ),
+                    );
+                  } */
   }
 
   Future<String> getUsername() async {
@@ -79,7 +157,7 @@ class _ProfileContentState extends State<ProfileContent> {
     return prefs.getString("token");
   }
 
-  Future _fetchData() async {
+  Future<Map<String, dynamic>> _fetchData() async {
     String username = await getUsername();
     String tokenID = await getToken();
     ServerApi serverApi = new ServerApi();
@@ -87,19 +165,18 @@ class _ProfileContentState extends State<ProfileContent> {
 
     Response response = await serverApi.getUserInfo(user);
     if (response.statusCode == 200) {
-      /* setState(() {
+      setState(() {
         receivedList = response.data;
-      }); */
-      return response.data;
+      });
     }
+
+    return response.data;
   }
 
-  Widget createListView(BuildContext context, AsyncSnapshot snapshot) {
-    Map<String, dynamic> receivedMap = snapshot.data['propertyMap'];
+  Widget createPage(BuildContext context, AsyncSnapshot snapshot) {
+    List<dynamic> rec = snapshot.data;
     return Scaffold(
-      appBar: CustomAppBar(
-        receivedMap: receivedMap,
-      ),
+      appBar: CustomAppBar(),
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: 16),
         child: Column(
@@ -109,7 +186,10 @@ class _ProfileContentState extends State<ProfileContent> {
             SizedBox(
               height: 4,
             ),
-            Text(buildText(receivedMap['Name'])),
+            Text(
+              "",
+              style: _style2(),
+            ),
             SizedBox(
               height: 16,
             ),
@@ -121,7 +201,7 @@ class _ProfileContentState extends State<ProfileContent> {
               height: 4,
             ),
             Text(
-              buildText(receivedMap['Mobile']),
+              "963135249",
               style: _style2(),
             ),
             SizedBox(
@@ -135,7 +215,7 @@ class _ProfileContentState extends State<ProfileContent> {
               height: 4,
             ),
             Text(
-              buildText(receivedMap['Email']),
+              "octavio@hotmail.com",
               style: _style2(),
             ),
             SizedBox(
@@ -149,11 +229,22 @@ class _ProfileContentState extends State<ProfileContent> {
               height: 4,
             ),
             Text(
-              buildText(receivedMap['Address']),
+              "Rua da fazendinha nº16 Santa Cruz - Madeira",
               style: _style2(),
             ),
             SizedBox(
               height: 16,
+            ),
+            Text(
+              "Password",
+              style: _style(),
+            ),
+            SizedBox(
+              height: 4,
+            ),
+            Text(
+              "1234556789",
+              style: _style2(),
             ),
             SizedBox(
               height: 16,
@@ -166,27 +257,9 @@ class _ProfileContentState extends State<ProfileContent> {
       ),
     );
   }
-
-  TextStyle _style() {
-    return TextStyle(fontWeight: FontWeight.bold, fontSize: 19.0);
-  }
-
-  TextStyle _style2() {
-    return TextStyle(fontSize: 16.0);
-  }
-
-  String buildText(data) {
-    if (data == null) {
-      return 'undefined';
-    } else {
-      return data;
-    }
-  }
 }
 
 class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
-  final Map<String, dynamic> receivedMap;
-  CustomAppBar({this.receivedMap});
   @override
   Size get preferredSize => Size(double.infinity, 300);
 
@@ -208,6 +281,23 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
+                    IconButton(
+                      icon: Icon(
+                        Icons.menu,
+                        color: Colors.white,
+                        size: 35,
+                      ),
+                      onPressed: () {
+                        print("//TODO: button clicked");
+                      },
+                    ),
+                    Text(
+                      "Profile",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                      ),
+                    ),
                     Align(
                       alignment: Alignment.bottomRight,
                       child: GestureDetector(
@@ -216,6 +306,21 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
                         },
                         child: Padding(
                           padding: const EdgeInsets.fromLTRB(0, 10, 10, 0),
+                          child: Container(
+                            width: 90,
+                            height: 32,
+                            child: Center(
+                              child: Text("Edit Profile"),
+                            ),
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(16)),
+                                boxShadow: [
+                                  BoxShadow(
+                                      color: Colors.black12, blurRadius: 10)
+                                ]),
+                          ),
                         ),
                       ),
                     ),
@@ -234,14 +339,13 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
                               shape: BoxShape.circle,
                               image: DecorationImage(
                                   fit: BoxFit.cover,
-                                  image: NetworkImage(
-                                      getImage(receivedMap['Photo'])))),
+                                  image: NetworkImage(photoPerfil))),
                         ),
                         SizedBox(
                           height: 16,
                         ),
                         Text(
-                          receivedMap['Username'],
+                          "@octaviojardim",
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 20,
@@ -265,7 +369,7 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
                                   ),
                                 ),
                                 Text(
-                                  "asd",
+                                  "2",
                                   style: TextStyle(
                                       fontSize: 24, color: Colors.white),
                                 )
@@ -301,7 +405,7 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
                                   ),
                                 ),
                                 Text(
-                                  receivedMap['Points'].toString(),
+                                  "20",
                                   style: TextStyle(
                                       color: Colors.white, fontSize: 24),
                                 )
@@ -318,7 +422,7 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
                                   ),
                                 ),
                                 Text(
-                                  receivedMap['numTrails'].toString(),
+                                  "8",
                                   style: TextStyle(
                                       fontSize: 24, color: Colors.white),
                                 )
@@ -337,13 +441,8 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
     );
   }
 
-  String getImage(receivedMap) {
-    if (receivedMap == null) {
-      return "https://lh3.googleusercontent.com/6cFAhsyW9uDLFHFM-zLc2mqtOQp-bS42ywO3CWq9-V-3760Fwju-J3HCoe7vXbxSLQjj56U9ZVQfcRohKVtDxrMAszwZJw";
-    } else {
-      return receivedMap;
-    }
-  }
+  final String photoPerfil =
+      "https://i.kym-cdn.com/photos/images/newsfeed/000/787/356/d6f.jpg";
 }
 
 class MyClipper extends CustomClipper<Path> {
@@ -362,7 +461,7 @@ class MyClipper extends CustomClipper<Path> {
     var secondControlPoint = Offset(size.width * .75, size.height - 10);
     p.quadraticBezierTo(secondControlPoint.dx, secondControlPoint.dy,
         secondEndPoint.dx, secondEndPoint.dy);
-//TotalTime , numTrailsDone
+
     p.lineTo(size.width, 0);
     p.close();
 

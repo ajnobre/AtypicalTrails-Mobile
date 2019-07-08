@@ -31,6 +31,6 @@ class _HomeState extends State<Home> {
     } else
       return ExplorePage();
   } */
-    return ExplorePage();
+    return LoginPage();
   }
 }

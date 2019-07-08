@@ -1,4 +1,6 @@
-
+import 'package:atypical/elements/drawer.dart';
+import 'package:atypical/serverApi/serverApi.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 class MyRankingPage extends StatefulWidget {
@@ -7,59 +9,67 @@ class MyRankingPage extends StatefulWidget {
 }
 
 class _RankingPageState extends State<MyRankingPage> {
+  List<dynamic> receivedList;
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: new CustomScrollView(
-        slivers: <Widget>[
-          SliverAppBar(
-           title : Text('Ranking'),
-           expandedHeight: 200.0,
-           pinned: true,
-           backgroundColor: Colors.green,
-           flexibleSpace: new FlexibleSpaceBar(
-             background: Image.network('https://scontent.flis8-2.fna.fbcdn.net/v/t1.0-9/13510840_1389635067736401_2668166223219640284_n.jpg?_nc_cat=107&_nc_oc=AQnq9-5s4uPyalUXTpzYYcQ44yVvajIFlyYRyJah4eEdxOGfJgOD0aZfdPngAh3R5A311IH-qJ8GdYBQ1TcPjwm7&_nc_ht=scontent.flis8-2.fna&oh=e525eb681e323be3155f0ffd226f463a&oe=5DC74C8A', fit: BoxFit.fill,),
-              
-           ),
-            ),
-            new SliverList(
-              delegate: new SliverChildBuilderDelegate((context,index)=>       
-              new Card(     
-                child: new Container(         
-                padding: EdgeInsets.all(10.0),
-                child: new Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Row(
-                      children: <Widget>[
-                      CircleAvatar(           
-                      backgroundColor: Colors.transparent,
-                      backgroundImage: new NetworkImage('https://i.kym-cdn.com/photos/images/original/000/787/356/d6f.jpg'),
-                      ),
-                      SizedBox(width: 10.0, height: 2.0,),
-                      Text('@username'),
-                      
-                    ],),
-                 
-                     Row(     
-                       children: <Widget>[                 
-                      Text('Points'),
-                      SizedBox(width: 5.0,),
-                      Text('200')
-                       ]),
-                      
-                  ],
-                )
-              )
-                ,),
-                childCount: 20,),
+    var futureBuilder = new FutureBuilder(
+      future: _fetchData(),
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        switch (snapshot.connectionState) {
+          case ConnectionState.none:
+          case ConnectionState.waiting:
+            return Center(child: new CircularProgressIndicator());
+          default:
+            if (snapshot.hasError)
+              return new Text('Error: ${snapshot.error}');
+            else
+              return createListView(context, snapshot);
+        }
+      },
+    );
+    return WillPopScope(
+      onWillPop: () async {
+        return false;
+      },
+      child: new Scaffold(
+        body: futureBuilder,
+        drawer: NavigationDrawer(),
+        appBar: AppBar(
+          backgroundColor: Colors.green,
+          title: Text('Ranking'),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.add),
+              onPressed: () {},
             )
-          
-        ]
-       
-      )
-      
-      
+          ],
+        ),
+      ),
     );
   }
+
+  Future<Response> getData(int offset) async {
+    ServerApi serverApi = new ServerApi();
+    return await serverApi.getRanking(0);
   }
+
+  Future _fetchData() async {
+    Response response = await getData(0);
+    if (response.statusCode == 200) {
+      setState(() {
+        receivedList = response.data;
+      });
+    }
+
+    return response.data;
+  }
+
+  Widget createListView(BuildContext context, AsyncSnapshot snapshot) {
+    List<dynamic> rankingList = snapshot.data;
+    return ListView.builder(
+      padding: const EdgeInsets.all(16.0),
+      itemCount: rankingList.length,
+      itemBuilder: (context, i) {},
+    );
+  }
+}

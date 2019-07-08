@@ -2,24 +2,12 @@ import 'dart:async';
 
 import 'package:atypical/pages/explore.dart';
 import 'package:atypical/pages/signUp.dart';
+import 'package:atypical/requests/user.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-part 'login.g.dart';
-
-@JsonSerializable()
-class User {
-  User(this.username, this.password);
-
-  String username;
-  String password;
-
-  factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
-
-  Map<String, dynamic> toJson() => _$UserToJson(this);
-}
+import 'package:atypical/serverApi/serverApi.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -46,11 +34,12 @@ class _LoginPageState extends State<LoginPage> {
 
   Future _submit(String username, String password) async {
     if (!(username.isEmpty || password.isEmpty)) {
-      User user = new User(username, password);
-      response = await loginUser(user);
+      User user = new User(username, "", password, "", 0);
+      response = await ServerApi().loginUser(user);
       if (response.statusCode == 200) {
-        saveToken(response.data['msg']);
-
+        await saveToken(response.data['msg']);
+        await saveUsername(username);
+        await saveStartTime();
         _isInvalidAsyncPass = false;
       } else if (response.statusCode == 403) {
         _isInvalidAsyncPass = true;
@@ -69,26 +58,14 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
-  saveToken(String token) async {
+  Future saveToken(String token) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString("token", token);
+    prefs.setString("token", token);
   }
 
-  getToken() async {
+  Future saveUsername(String username) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.getString("token");
-  }
-
-  Future loginUser(User user) async {
-    String url = 'https://atypicaltrailsweb.appspot.com/rest/login/user';
-
-    try {
-      response = await dio.post(url, data: user.toJson());
-    } on DioError catch (e) {
-      response = e.response;
-    }
-
-    return response;
+    prefs.setString("username", username);
   }
 
   @override
@@ -222,17 +199,17 @@ class _LoginPageState extends State<LoginPage> {
                             usernameController.text, passwordController.text);
 
                         /*
-                        loginUser(username, password);
-                        setState(() {
-                          if (_formKey.currentState.validate()) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  // builder: (context) => HomePage(),
-                                  ),
-                            );
-                          }
-                        });*/
+                                        loginUser(username, password);
+                                        setState(() {
+                                          if (_formKey.currentState.validate()) {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  // builder: (context) => HomePage(),
+                                                  ),
+                                            );
+                                          }
+                                        });*/
                       },
                     ),
                   ),
@@ -263,5 +240,10 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
+  }
+
+  Future saveStartTime() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setInt("strTime", DateTime.now().millisecondsSinceEpoch);
   }
 }
