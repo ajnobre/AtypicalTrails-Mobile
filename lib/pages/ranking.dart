@@ -10,6 +10,7 @@ class MyRankingPage extends StatefulWidget {
 
 class _RankingPageState extends State<MyRankingPage> {
   List<dynamic> receivedList;
+  final _biggerFont = const TextStyle(fontSize: 18.0);
   @override
   Widget build(BuildContext context) {
     var futureBuilder = new FutureBuilder(
@@ -60,28 +61,34 @@ class _RankingPageState extends State<MyRankingPage> {
     }
   }
 
+  Widget _buildRow(Map<String, dynamic> trail) {
+    return FlatButton(
+      child: ListTile(
+        title: Text(
+          trail['name'],
+          style: _biggerFont,
+        ),
+      ),
+      onPressed: () {},
+    );
+  }
+
   Widget createListView(BuildContext context, AsyncSnapshot snapshot) {
     List<dynamic> rankingList = snapshot.data;
-    return Scaffold(
-      body: new CustomScrollView(
-        slivers: <Widget>[
-          SliverAppBar(
-            expandedHeight: 200.0,
-            snap: true,
-            automaticallyImplyLeading: false,
-            backgroundColor: Colors.green,
-            flexibleSpace: new FlexibleSpaceBar(
-                background: Image(
-              image: AssetImage("images/hiking-buddy.jpg"),
-              fit: BoxFit.fill,
-            ) /* Image.network(
-                'http://hike-anchorage-alaska.com/portals/7/images/hiking-buddy.jpg',
-                fit: BoxFit.fill,
-              ), */
-                ),
-          ),
-        ],
-      ),
+    final _contents = <Map<String, dynamic>>[];
+    return ListView.builder(
+      padding: const EdgeInsets.all(16.0),
+      itemCount: rankingList.length,
+      itemBuilder: (context, i) {
+/*         if (i < rankingList.length) {
+          _contents.add(rankingList[i]);
+        } */
+
+        if (i < rankingList.length) {
+          return _buildRow(rankingList[i]);
+        }
+        return null;
+      },
     );
   }
 }

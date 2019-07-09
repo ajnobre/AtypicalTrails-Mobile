@@ -686,7 +686,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Future _submit(String username, String password) async {
     if (!(username.isEmpty || password.isEmpty)) {
-      //Response res = await logout.logout();
+      Response res = await logout.logout();
       User user = new User(username, "", password, "", 0);
       response = await ServerApi().loginUser(user);
 

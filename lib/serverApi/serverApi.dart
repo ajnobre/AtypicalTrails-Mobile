@@ -46,4 +46,9 @@ class ServerApi {
   Future<Response> logout(User user) async {
     return await post("login/logout", user.toJson());
   }
+
+  Future<Response> getTrailComments(int offset, String codeName) async {
+    Map<String, dynamic> r = {"offset": offset, "codeName": codeName};
+    return await post("trails/getTrailComments", r);
+  }
 }
