@@ -3,10 +3,11 @@ import 'package:atypical/requests/trail.dart';
 import 'package:atypical/requests/user.dart';
 import 'package:atypical/serverApi/serverApi.dart';
 import 'package:atypical/serverApi/serverApi.dart' as prefix0;
+import 'package:atypical/utils/sharedpreferences.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
-import 'package:atypical/utils/tokens.dart';
 
 class FinishTrailPage extends StatefulWidget {
   final int time;
@@ -24,6 +25,7 @@ class _FinishTrailPageState extends State<FinishTrailPage> {
   var _formKey = GlobalKey<FormState>();
   ServerApi serverApi = new ServerApi();
   final commentController = TextEditingController();
+  SharedPrefs sharedPrefs = new SharedPrefs();
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -78,8 +80,11 @@ class _FinishTrailPageState extends State<FinishTrailPage> {
   }
 
   Future _submit() async {
-    Trail trail = new Trail(
-        widget.trailKey, "alvaroTest", rating.round(), commentController.text);
+    String username = await sharedPrefs.getUsername();
+
+    Trail trail = new Trail(widget.trailKey, username, rating.round(),
+        commentController.text, widget.time);
+        //Isto tem de passar para assincrono.
     response = await serverApi.addToFinished(trail);
     if (response.statusCode == 200) {
       Navigator.push(

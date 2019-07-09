@@ -265,7 +265,8 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
                                   ),
                                 ),
                                 Text(
-                                  "asd",
+                                  buildInt(receivedMap['numTrailsDone'])
+                                      .toString(),
                                   style: TextStyle(
                                       fontSize: 24, color: Colors.white),
                                 )
@@ -281,7 +282,7 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
                                     fontSize: 16,
                                   ),
                                 ),
-                                Text("00:00",
+                                Text(getTime(receivedMap['TotalTime']),
                                     style: TextStyle(
                                         color: Colors.white, fontSize: 24))
                               ],
@@ -343,6 +344,26 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
     } else {
       return receivedMap;
     }
+  }
+
+  String getTime(receivedMap) {
+    int hours, minutes;
+    if (receivedMap == null) {
+      hours = 0;
+      minutes = 0;
+    } else {
+      hours = receivedMap ~/ 60;
+      minutes = receivedMap % 60;
+    }
+
+    return '$hours:$minutes';
+  }
+
+  int buildInt(receivedMap) {
+    if (receivedMap == null) {
+      return 0;
+    } else
+      return receivedMap;
   }
 }
 

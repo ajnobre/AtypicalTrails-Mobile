@@ -1,7 +1,6 @@
 import 'package:atypical/pages/explore.dart';
 import 'package:atypical/pages/finishedTrail.dart';
 import 'package:atypical/pages/login.dart';
-import 'package:atypical/utils/tokens.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

@@ -56,20 +56,32 @@ class _RankingPageState extends State<MyRankingPage> {
   Future _fetchData() async {
     Response response = await getData(0);
     if (response.statusCode == 200) {
-      setState(() {
-        receivedList = response.data;
-      });
+      return response.data;
     }
-
-    return response.data;
   }
 
   Widget createListView(BuildContext context, AsyncSnapshot snapshot) {
     List<dynamic> rankingList = snapshot.data;
-    return ListView.builder(
-      padding: const EdgeInsets.all(16.0),
-      itemCount: rankingList.length,
-      itemBuilder: (context, i) {},
+    return Scaffold(
+      body: new CustomScrollView(
+        slivers: <Widget>[
+          SliverAppBar(
+            expandedHeight: 200.0,
+            snap: true,
+            automaticallyImplyLeading: false,
+            backgroundColor: Colors.green,
+            flexibleSpace: new FlexibleSpaceBar(
+                background: Image(
+              image: AssetImage("images/hiking-buddy.jpg"),
+              fit: BoxFit.fill,
+            ) /* Image.network(
+                'http://hike-anchorage-alaska.com/portals/7/images/hiking-buddy.jpg',
+                fit: BoxFit.fill,
+              ), */
+                ),
+          ),
+        ],
+      ),
     );
   }
 }

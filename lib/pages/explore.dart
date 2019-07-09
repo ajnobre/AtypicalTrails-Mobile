@@ -101,9 +101,10 @@ class _ExploreContentState extends State<ExploreContent> {
   }
 
   Future<dynamic> _getData() async {
-    List<dynamic> values;
+    List<dynamic> values, values1;
     values = await _submit(0);
-    values.addAll(await _submit(1));
+    values1 = await _submit(1);
+    values.addAll(values1);
     return values;
   }
 
