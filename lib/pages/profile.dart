@@ -1,5 +1,4 @@
 import 'package:atypical/elements/drawer.dart';
-import 'package:atypical/pages/ranking.dart';
 import 'package:atypical/pages/trailsdone.dart';
 
 import 'package:atypical/requests/user.dart';
@@ -7,8 +6,6 @@ import 'package:atypical/serverApi/serverApi.dart';
 import 'package:atypical/utils/sharedpreferences.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -52,23 +49,16 @@ class _ProfileContentState extends State<ProfileContent> {
         }
       },
     );
-    return WillPopScope(
+/*     return WillPopScope(
       onWillPop: () async {
         return false;
-      },
-      child: new Scaffold(
-        body: futureBuilder,
-        drawer: NavigationDrawer(),
-        appBar: AppBar(
-          backgroundColor: Colors.green,
-          title: Text('Profile'),
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.add),
-              onPressed: () {},
-            )
-          ],
-        ),
+      }, */
+    return new Scaffold(
+      body: futureBuilder,
+      drawer: NavigationDrawer(),
+      appBar: AppBar(
+        backgroundColor: Colors.green,
+        title: Text('Profile'),
       ),
     );
   }
@@ -81,9 +71,6 @@ class _ProfileContentState extends State<ProfileContent> {
 
     Response response = await serverApi.getUserInfo(user);
     if (response.statusCode == 200) {
-      /* setState(() {
-        receivedList = response.data;
-      }); */
       return response.data;
     }
   }

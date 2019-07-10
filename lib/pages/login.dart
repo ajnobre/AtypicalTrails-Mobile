@@ -36,6 +36,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Future _submit(String username, String password) async {
     if (!(username.isEmpty || password.isEmpty)) {
+      await sharedPrefs.saveStartTime();
       response = await logout.logout();
       User user = new User(username, "", password, "", 0);
       response = await ServerApi().loginUser(user);
@@ -43,7 +44,6 @@ class _LoginPageState extends State<LoginPage> {
       if (response.statusCode == 200) {
         await sharedPrefs.saveToken(response.data['msg']);
         await sharedPrefs.saveUsername(username);
-        await sharedPrefs.saveStartTime();
         _isInvalidAsyncPass = false;
       } else if (response.statusCode == 403) {
         _isInvalidAsyncPass = true;
@@ -54,8 +54,7 @@ class _LoginPageState extends State<LoginPage> {
       if (_formKey.currentState.validate()) {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => ExplorePage()
-              ),
+          MaterialPageRoute(builder: (context) => ExplorePage()),
         );
       }
     });
@@ -93,7 +92,6 @@ class _LoginPageState extends State<LoginPage> {
                 bottom: 0),
           ),
           Container(
-
             child: Column(children: <Widget>[
               Container(
                 padding: EdgeInsets.only(left: 30, right: 30),
@@ -237,9 +235,6 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
-
-
-
 }
 
 class HomeScreenTopPart extends StatefulWidget {

@@ -34,13 +34,10 @@ class Logout {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        // return object of type Dialog
         return AlertDialog(
           title: new Text("Loging Out"),
           content: new Text("Are you sure you want to log out?"),
           actions: <Widget>[
-            //FinishedTrailPage
-            // usually buttons at the bottom of the dialog
             new FlatButton(
               child: new Text("Yes"),
               onPressed: () {

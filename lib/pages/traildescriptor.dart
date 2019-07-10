@@ -1,17 +1,19 @@
 import 'dart:async';
-import 'dart:collection';
+
 import 'dart:convert';
-import 'package:atypical/pages/explore.dart';
+
 import 'package:atypical/pages/trail.dart';
 import 'package:atypical/serverApi/serverApi.dart';
-import 'package:dio/dio.dart';
+
 import 'package:flutter/services.dart';
 
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-//import 'package:google_maps_flutter/google_maps_flutter.dart';
+
 import 'package:location/location.dart';
 import 'package:atypical/utils/points.dart';
+
+import 'comments.dart';
 
 class TrailDesc extends StatefulWidget {
   final Map<String, dynamic> data;
@@ -133,7 +135,7 @@ class _TrailDescState extends State<TrailDesc> {
           currentLocation.longitude,
           startPosition.latitude,
           startPosition.longitude);
-      if (/* dist < 0.025 */ dist < 0.6) {
+      if (dist < 0.03) {
         return Navigator.push(
           context,
           MaterialPageRoute(
@@ -168,9 +170,6 @@ class _TrailDescState extends State<TrailDesc> {
     try {
       curLoc = await location.getLocation();
     } on PlatformException catch (e) {
-      if (e.code == 'PERMISSION_DENIED') {
-        var error = 'Permission denied';
-      }
       curLoc = null;
     }
     return curLoc;
@@ -276,6 +275,22 @@ class _TrailDescState extends State<TrailDesc> {
             child: _buildButtonColumn(color, Icons.send, 'START'),
             onPressed: startButtonHandler,
           ),
+          SizedBox(
+            width: 5,
+          ),
+          FlatButton(
+            child: _buildButtonColumn(color, Icons.comment, 'COMMENTS'),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => CommentsPage(
+                        trailKey: widget.data['CodeName'],
+                      ),
+                ),
+              );
+            },
+          ),
         ],
       ),
     );
@@ -294,7 +309,7 @@ class _TrailDescState extends State<TrailDesc> {
         body: Column(
           children: [
             Flexible(
-              flex: 2,
+              flex: 3,
               child: StoreMap(points: _getMarkers()),
             ),
             Flexible(
@@ -312,8 +327,6 @@ class _TrailDescState extends State<TrailDesc> {
       ),
     );
   }
-
-
 }
 
 void _showDialog(context) {

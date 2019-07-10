@@ -1,16 +1,17 @@
 import 'package:atypical/elements/drawer.dart';
-import 'package:atypical/requests/user.dart';
 import 'package:atypical/serverApi/serverApi.dart';
 import 'package:atypical/utils/sharedpreferences.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
-class TrailsDone extends StatefulWidget {
+class CommentsPage extends StatefulWidget {
+  final String trailKey;
+  CommentsPage({this.trailKey});
   @override
-  _TrailsDoneState createState() => _TrailsDoneState();
+  _CommentsPageState createState() => _CommentsPageState();
 }
 
-class _TrailsDoneState extends State<TrailsDone> {
+class _CommentsPageState extends State<CommentsPage> {
   SharedPrefs sharedPrefs = new SharedPrefs();
 
   @override
@@ -31,23 +32,20 @@ class _TrailsDoneState extends State<TrailsDone> {
       },
     );
 
-    return new Scaffold(
+    return Scaffold(
       body: futureBuilder,
       drawer: NavigationDrawer(),
       appBar: AppBar(
         backgroundColor: Colors.green,
-        title: Text('Trails Done'),
+        title: Text('Comments'),
       ),
     );
   }
 
   Future _fetchData() async {
-    String username = await sharedPrefs.getUsername();
-    String tokenID = await sharedPrefs.getToken();
     ServerApi serverApi = new ServerApi();
-    User user = new User(username, "", "", tokenID, 0);
 
-    Response response = await serverApi.getTrailsDone(user);
+    Response response = await serverApi.getTrailComments(0, widget.trailKey);
     if (response.statusCode == 200) {
       return response.data;
     }
@@ -65,10 +63,6 @@ class _TrailsDoneState extends State<TrailsDone> {
         padding: const EdgeInsets.all(16.0),
         itemCount: trailList.length,
         itemBuilder: (context, i) {
-          /*         if (i < rankingList.length) {
-                          _contents.add(rankingList[i]);
-                        } */
-
           if (i < trailList.length) {
             return _buildRow(trailList[i]['propertyMap']);
           }
@@ -78,41 +72,39 @@ class _TrailsDoneState extends State<TrailsDone> {
   }
 
   Widget _buildRow(Map<String, dynamic> trail) {
-    return FlatButton(
-      child: Row(
-        children: <Widget>[
-          Row(
-            children: <Widget>[
-              SizedBox(
-                width: 10.0,
-                height: 2.0,
-              ),
-              Text(trail['Name']),
-            ],
-          ),
-          SizedBox(
-            width: 20,
-          ),
-          Row(children: <Widget>[
-            Text('Feedback'),
-            SizedBox(
-              width: 5.0,
+    return Column(
+      children: <Widget>[
+        Row(
+          children: <Widget>[
+            Row(
+              children: <Widget>[
+                SizedBox(
+                  width: 10.0,
+                  height: 2.0,
+                ),
+                Text(
+                  trail['Creator'],
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ],
             ),
-            Text(trail['Feedback'].toString())
-          ]),
-          SizedBox(
-            width: 20,
-          ),
-          Row(children: <Widget>[
-            Text('Completed in '),
             SizedBox(
-              width: 5.0,
+              width: 20,
             ),
-            Text(trail['TimeToComplete'].toString() + ' min')
-          ])
-        ],
-      ),
-      onPressed: () {},
+            Row(children: <Widget>[getText(trail['Comment'])]),
+            SizedBox(
+              width: 20,
+            ),
+          ],
+        ),
+      ],
     );
+  }
+
+  getText(String comment) {
+    if (comment == null) {
+      return Text('');
+    } else
+      return Text(comment);
   }
 }

@@ -12,7 +12,8 @@ Trail _$TrailFromJson(Map<String, dynamic> json) {
       json['username'] as String,
       json['feedback'] as int,
       json['comment'] as String,
-      json['timeToComplete'] as int);
+      json['timeToComplete'] as int,
+      json['tokenID'] as String);
 }
 
 Map<String, dynamic> _$TrailToJson(Trail instance) => <String, dynamic>{
@@ -20,5 +21,6 @@ Map<String, dynamic> _$TrailToJson(Trail instance) => <String, dynamic>{
       'username': instance.username,
       'feedback': instance.feedback,
       'comment': instance.comment,
-      'timeToComplete': instance.timeToComplete
+      'timeToComplete': instance.timeToComplete,
+      'tokenID': instance.tokenID
     };

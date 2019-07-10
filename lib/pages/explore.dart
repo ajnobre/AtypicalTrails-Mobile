@@ -1,13 +1,9 @@
-import 'dart:convert';
 import 'package:atypical/elements/drawer.dart';
 import 'package:atypical/pages/traildescriptor.dart';
-import 'package:atypical/pages/trail.dart';
+
 import 'package:atypical/serverApi/serverApi.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:json_annotation/json_annotation.dart';
-import 'package:convert/convert.dart';
 
 class ExplorePage extends StatefulWidget {
   final String username;
@@ -64,12 +60,7 @@ class _ExploreContentState extends State<ExploreContent> {
         appBar: AppBar(
           backgroundColor: Colors.green,
           title: Text('Explore'),
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.add),
-              onPressed: () {},
-            )
-          ],
+          actions: <Widget>[],
         ),
       ),
     );
@@ -84,25 +75,19 @@ class _ExploreContentState extends State<ExploreContent> {
         ),
       ),
       onPressed: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => TrailDesc(data: trail
-
-/*                 TrailPage(
-                      data: trail, */
-                    )));
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => TrailDesc(data: trail)));
       },
     );
   }
 
-
-
   Future<dynamic> _getData() async {
-    List<dynamic> values, values1;
+    List<dynamic> values, values1, values2;
     values = await _submit(0);
-    values1 = await _submit(1);
+    values1 = await _submit(12);
+    values2 = await _submit(24);
     values.addAll(values1);
+    values.addAll(values2);
     return values;
   }
 

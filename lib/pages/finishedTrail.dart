@@ -1,12 +1,11 @@
 import 'package:atypical/pages/explore.dart';
 import 'package:atypical/requests/trail.dart';
-import 'package:atypical/requests/user.dart';
 import 'package:atypical/serverApi/serverApi.dart';
-import 'package:atypical/serverApi/serverApi.dart' as prefix0;
+
 import 'package:atypical/utils/sharedpreferences.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 
 class FinishTrailPage extends StatefulWidget {
@@ -53,19 +52,21 @@ class _FinishTrailPageState extends State<FinishTrailPage> {
                   ),
                 ),
                 const SizedBox(height: 30),
-                SmoothStarRating(
-                    allowHalfRating: false,
-                    onRatingChanged: (v) {
-                      setState(() {
-                        rating = v;
-                      });
-                    },
-                    starCount: 5,
-                    rating: rating,
-                    size: 40.0,
-                    color: Colors.green,
-                    borderColor: Colors.green,
-                    spacing: 0.0),
+                Center(
+                  child: SmoothStarRating(
+                      allowHalfRating: false,
+                      onRatingChanged: (v) {
+                        setState(() {
+                          rating = v;
+                        });
+                      },
+                      starCount: 5,
+                      rating: rating,
+                      size: 40.0,
+                      color: Colors.green,
+                      borderColor: Colors.green,
+                      spacing: 0.0),
+                ),
                 const SizedBox(height: 30),
                 RaisedButton(
                   onPressed: _submit,
@@ -81,10 +82,10 @@ class _FinishTrailPageState extends State<FinishTrailPage> {
 
   Future _submit() async {
     String username = await sharedPrefs.getUsername();
-
+    String tokenID = await sharedPrefs.getToken();
     Trail trail = new Trail(widget.trailKey, username, rating.round(),
-        commentController.text, widget.time);
-        //Isto tem de passar para assincrono.
+        commentController.text, widget.time, tokenID);
+    //Isto tem de passar para assincrono.
     response = await serverApi.addToFinished(trail);
     if (response.statusCode == 200) {
       Navigator.push(

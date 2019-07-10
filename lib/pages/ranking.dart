@@ -10,7 +10,6 @@ class MyRankingPage extends StatefulWidget {
 
 class _RankingPageState extends State<MyRankingPage> {
   List<dynamic> receivedList;
-  final _biggerFont = const TextStyle(fontSize: 18.0);
   @override
   Widget build(BuildContext context) {
     var futureBuilder = new FutureBuilder(
@@ -28,25 +27,20 @@ class _RankingPageState extends State<MyRankingPage> {
         }
       },
     );
-    return WillPopScope(
+    return /* WillPopScope(
       onWillPop: () async {
         return false;
       },
-      child: new Scaffold(
-        body: futureBuilder,
-        drawer: NavigationDrawer(),
-        appBar: AppBar(
-          backgroundColor: Colors.green,
-          title: Text('Ranking'),
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.add),
-              onPressed: () {},
-            )
-          ],
-        ),
+      child: */
+        new Scaffold(
+      body: futureBuilder,
+      drawer: NavigationDrawer(),
+      appBar: AppBar(
+        backgroundColor: Colors.green,
+        title: Text('Ranking'),
       ),
     );
+/*     ); */
   }
 
   Future<Response> getData(int offset) async {
@@ -64,17 +58,7 @@ class _RankingPageState extends State<MyRankingPage> {
   Widget _buildRow(Map<String, dynamic> trail) {
     return FlatButton(
       child: Row(
-        children: /* <Widget>[
-          Text(
-            trail['name'],
-            style: _biggerFont,
-          ),
-          Text(
-            trail['points'].toString(),
-            style: _biggerFont,
-          ),
-        ], */
-            <Widget>[
+        children: <Widget>[
           Row(
             children: <Widget>[
               CircleAvatar(
@@ -106,15 +90,11 @@ class _RankingPageState extends State<MyRankingPage> {
 
   Widget createListView(BuildContext context, AsyncSnapshot snapshot) {
     List<dynamic> rankingList = snapshot.data;
-    final _contents = <Map<String, dynamic>>[];
+
     return ListView.builder(
       padding: const EdgeInsets.all(16.0),
       itemCount: rankingList.length,
       itemBuilder: (context, i) {
-        /*         if (i < rankingList.length) {
-                          _contents.add(rankingList[i]);
-                        } */
-
         if (i < rankingList.length) {
           return _buildRow(rankingList[i]);
         }
@@ -130,5 +110,4 @@ class _RankingPageState extends State<MyRankingPage> {
       return AssetImage('images/applogo.png');
     }
   }
-  
 }

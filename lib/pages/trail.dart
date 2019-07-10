@@ -7,10 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:flutter/services.dart';
-import 'package:rxdart/rxdart.dart';
-import 'dart:math';
-
-import 'package:smooth_star_rating/smooth_star_rating.dart';
 
 class MapSample extends StatefulWidget {
   final Set<Marker> markers;
@@ -48,9 +44,6 @@ class MapSampleState extends State<MapSample> {
     try {
       currentLocation = await location.getLocation();
     } on PlatformException catch (e) {
-      if (e.code == 'PERMISSION_DENIED') {
-        var error = 'Permission denied';
-      }
       currentLocation = null;
     }
   }
@@ -74,11 +67,6 @@ class MapSampleState extends State<MapSample> {
     zoom: 17,
   );
 
-  static final CameraPosition _kLake = CameraPosition(
-      bearing: 192.8334901395799,
-      target: LatLng(37.43296265331129, -122.08832357078792),
-      tilt: 59.440717697143555,
-      zoom: 19.151926040649414);
 
   @override
   Widget build(BuildContext context) {
@@ -126,11 +114,7 @@ class MapSampleState extends State<MapSample> {
                 )),
           ],
         ),
-/*       floatingActionButton: FloatingActionButton.extended(
-          onPressed: _goToTheLake,
-          label: Text('To the lake!'),
-          icon: Icon(Icons.directions_boat),
-        ), */
+
       ),
     );
   }
@@ -146,7 +130,7 @@ class MapSampleState extends State<MapSample> {
         currentLocation = recLoc;
       });
     });
-    if (/* dist < 0.035 */ dist < 0.6) {
+    if (dist < 0.035) {
       _showDialogSuccess(context);
     } else {
       _showDialogQuit(context, dist);
@@ -198,18 +182,16 @@ class MapSampleState extends State<MapSample> {
   }
 
   void _showDialogSuccess(context) {
-    var rating = 0.0;
 
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        // return object of type Dialog
+
         return AlertDialog(
           title: new Text("Well done"),
           content: new Text("You have reached your destination."),
           actions: <Widget>[
-            //FinishedTrailPage
-            // usually buttons at the bottom of the dialog
+
 
             new FlatButton(
               child: new Text("Close"),
@@ -221,18 +203,8 @@ class MapSampleState extends State<MapSample> {
                               time: getTime(),
                               trailKey: widget.trailKey,
 
-                              /*                 TrailPage(
-                                                    data: trail, */
                             )));
-                /*                 
-                                              Navigator.pushNamedAndRemoveUntil(
-                                                  context, "/finishedTrail/", (_) => false); */
-                /*                 Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) => FinishTrailPage(),
-                                                ),
-                                              ); */
+
               },
             ),
           ],
