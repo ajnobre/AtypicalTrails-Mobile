@@ -67,7 +67,6 @@ class MapSampleState extends State<MapSample> {
     zoom: 17,
   );
 
-
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -93,6 +92,7 @@ class MapSampleState extends State<MapSample> {
               bottom: 50,
               left: 10,
               child: Slider(
+                
                 min: 12,
                 max: 19,
                 divisions: 4,
@@ -114,7 +114,6 @@ class MapSampleState extends State<MapSample> {
                 )),
           ],
         ),
-
       ),
     );
   }
@@ -182,17 +181,13 @@ class MapSampleState extends State<MapSample> {
   }
 
   void _showDialogSuccess(context) {
-
     showDialog(
       context: context,
       builder: (BuildContext context) {
-
         return AlertDialog(
           title: new Text("Well done"),
           content: new Text("You have reached your destination."),
           actions: <Widget>[
-
-
             new FlatButton(
               child: new Text("Close"),
               onPressed: () {
@@ -202,9 +197,7 @@ class MapSampleState extends State<MapSample> {
                         builder: (context) => FinishTrailPage(
                               time: getTime(),
                               trailKey: widget.trailKey,
-
                             )));
-
               },
             ),
           ],

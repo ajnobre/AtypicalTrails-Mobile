@@ -78,32 +78,28 @@ class _CommentsPageState extends State<CommentsPage> {
   }
 
   Widget _buildRow(Map<String, dynamic> trail) {
-    return Column(
-      children: <Widget>[
-        Row(
-          children: <Widget>[
-            Row(
-              children: <Widget>[
-                SizedBox(
-                  width: 10.0,
-                  height: 2.0,
-                ),
-                Text(
-                  trail['Creator'],
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-            SizedBox(
-              width: 20,
-            ),
-            Row(children: <Widget>[getText(trail['Comment'])]),
-            SizedBox(
-              width: 20,
-            ),
-          ],
-        ),
-      ],
+    return OutlineButton(
+      borderSide: BorderSide(color: Colors.amber[600]),
+      child: Wrap(
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              Text(
+                trail['Creator'],
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+          SizedBox(
+            width: 20,
+          ),
+          Wrap(children: <Widget>[getText(trail['Comment'])]),
+          SizedBox(
+            width: 20,
+          ),
+        ],
+      ),
+      onPressed: () {},
     );
   }
 

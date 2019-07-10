@@ -15,7 +15,10 @@ class NavigationDrawer extends StatelessWidget {
       child: ListView(
         children: <Widget>[
           DrawerHeader(
-            child: Text('Menu'),
+            child: Container(
+              
+              child: Image.asset('images/logo.png'),
+            ),
             decoration: BoxDecoration(
               color: Colors.green,
             ),

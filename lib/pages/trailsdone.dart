@@ -65,10 +65,6 @@ class _TrailsDoneState extends State<TrailsDone> {
         padding: const EdgeInsets.all(16.0),
         itemCount: trailList.length,
         itemBuilder: (context, i) {
-          /*         if (i < rankingList.length) {
-                          _contents.add(rankingList[i]);
-                        } */
-
           if (i < trailList.length) {
             return _buildRow(trailList[i]['propertyMap']);
           }
@@ -78,14 +74,15 @@ class _TrailsDoneState extends State<TrailsDone> {
   }
 
   Widget _buildRow(Map<String, dynamic> trail) {
-    return FlatButton(
-      child: Row(
+    return OutlineButton(
+      borderSide: BorderSide(color: Colors.amber[600]),
+      child: Wrap(
         children: <Widget>[
           Row(
             children: <Widget>[
-              SizedBox(
-                width: 10.0,
-                height: 2.0,
+              Text(
+                'Trail: ',
+                style: TextStyle(fontWeight: FontWeight.bold),
               ),
               Text(trail['Name']),
             ],
@@ -94,7 +91,7 @@ class _TrailsDoneState extends State<TrailsDone> {
             width: 20,
           ),
           Row(children: <Widget>[
-            Text('Feedback'),
+            Text('Feedback', style: TextStyle(fontWeight: FontWeight.bold)),
             SizedBox(
               width: 5.0,
             ),
@@ -104,12 +101,15 @@ class _TrailsDoneState extends State<TrailsDone> {
             width: 20,
           ),
           Row(children: <Widget>[
-            Text('Completed in '),
-            SizedBox(
-              width: 5.0,
+            Text(
+              'Completed in ',
+              style: TextStyle(fontWeight: FontWeight.bold),
             ),
-            Text(trail['TimeToComplete'].toString() + ' min')
-          ])
+            Text(trail['TimeToComplete'].toString() + ' min'),
+            SizedBox(
+              height: 10.0,
+            ),
+          ]),
         ],
       ),
       onPressed: () {},

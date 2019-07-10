@@ -82,126 +82,132 @@ class _LoginPageState extends State<LoginPage> {
   login() {
     return Form(
       key: _formKey,
-      child: ListView(
-        children: <Widget>[
-          Padding(
-            padding: EdgeInsets.only(
-                top: MediaQuery.of(context).size.height / 2.6,
-                left: 40,
-                right: 40,
-                bottom: 0),
-          ),
-          Container(
-            child: Column(children: <Widget>[
-              Container(
-                padding: EdgeInsets.only(left: 30, right: 30),
-                height: 240,
-                child: Column(
-                  children: <Widget>[
-                    TextFormField(
-                      autofocus: true,
-                      keyboardType: TextInputType.text,
-                      controller: usernameController,
-                      decoration: InputDecoration(
-                        filled: true,
-                        labelText: "Username",
-                        fillColor: Colors.white,
-                        border: new OutlineInputBorder(
-                          borderRadius: new BorderRadius.circular(13.0),
-                          borderSide: new BorderSide(),
-                        ),
-                      ),
-                      style: TextStyle(fontSize: 15),
-                      validator: (String value) {
-                        if (value.isEmpty) {
-                          return 'Please enter your username';
-                        }
-                        return null;
-                      },
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    TextFormField(
-                      autofocus: true,
-                      obscureText: true,
-                      keyboardType: TextInputType.emailAddress,
-                      controller: passwordController,
-                      decoration: InputDecoration(
-                        filled: true,
-                        /* labelText: "Password", */
-                        hintText: 'Password',
-                        labelStyle: TextStyle(
-                          color: Colors.black45,
-                          fontWeight: FontWeight.w400,
-                          fontSize: 20,
-                        ),
-                        fillColor: Colors.white,
-                        border: new OutlineInputBorder(
-                          borderRadius: new BorderRadius.circular(13.0),
-                          borderSide: new BorderSide(),
-                        ),
-                      ),
-                      validator: (String value) {
-                        if (value.isEmpty) {
-                          return 'Please enter your password';
-                        }
-                        if (_isInvalidAsyncPass) {
-                          // disable message until after next async call
-                          _isInvalidAsyncPass = false;
-                          return 'Incorrect username or password';
-                        }
-                      },
-                      style: TextStyle(fontSize: 15),
-                    ),
-                  ],
-                ),
-              ),
-              Material(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(40)),
-                elevation: 18.0,
-                color: Color(0xFF4CAF50),
-                clipBehavior: Clip.antiAlias,
-                child: MaterialButton(
-                    minWidth: MediaQuery.of(context).size.width / 1.5,
-                    height: 50,
-                    color: Color(0xFF4CAF50),
-                    child: new Text('Login'.toUpperCase(),
-                        style:
-                            new TextStyle(fontSize: 16.0, color: Colors.white)),
-                    onPressed: () {
-                      _submit(usernameController.text, passwordController.text);
-                    }),
-              ),
-              Padding(
-                  padding: const EdgeInsets.only(top: 16),
-                  child: Material(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(40)),
-                    elevation: 18.0,
-                    color: Color(0xFF4CAF50),
-                    clipBehavior: Clip.antiAlias,
-                    child: MaterialButton(
-                      minWidth: MediaQuery.of(context).size.width / 1.5,
-                      height: 50,
-                      color: Colors.white,
-                      child: new Text('Create an Account'.toUpperCase(),
-                          style: new TextStyle(
-                              fontSize: 14.0, color: Colors.green)),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => SignUp(),
+      child: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.only(
+                  top: MediaQuery.of(context).size.height / 2.6,
+                  left: 40,
+                  right: 40,
+                  bottom: 0),
+            ),
+            Container(
+              child: Column(children: <Widget>[
+                Container(
+                  padding: EdgeInsets.only(left: 30, right: 30),
+                  height: MediaQuery.of(context).size.height,
+                  child: Column(
+                    children: <Widget>[
+                      TextFormField(
+                        autofocus: true,
+                        keyboardType: TextInputType.text,
+                        controller: usernameController,
+                        decoration: InputDecoration(
+                          filled: true,
+                          labelText: "Username",
+                          fillColor: Colors.white,
+                          border: new OutlineInputBorder(
+                            borderRadius: new BorderRadius.circular(13.0),
+                            borderSide: new BorderSide(),
                           ),
-                        );
-                      },
-                    ),
-                  )),
-            ]),
-          ),
-        ],
+                        ),
+                        style: TextStyle(fontSize: 15),
+                        validator: (String value) {
+                          if (value.isEmpty) {
+                            return 'Please enter your username';
+                          }
+                          return null;
+                        },
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      TextFormField(
+                        autofocus: true,
+                        obscureText: true,
+                        keyboardType: TextInputType.emailAddress,
+                        controller: passwordController,
+                        decoration: InputDecoration(
+                          filled: true,
+                          /* labelText: "Password", */
+                          hintText: 'Password',
+                          labelStyle: TextStyle(
+                            color: Colors.black45,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 20,
+                          ),
+                          fillColor: Colors.white,
+                          border: new OutlineInputBorder(
+                            borderRadius: new BorderRadius.circular(13.0),
+                            borderSide: new BorderSide(),
+                          ),
+                        ),
+                        validator: (String value) {
+                          if (value.isEmpty) {
+                            return 'Please enter your password';
+                          }
+                          if (_isInvalidAsyncPass) {
+                            // disable message until after next async call
+                            _isInvalidAsyncPass = false;
+                            return 'Incorrect username or password';
+                          }
+                        },
+                        style: TextStyle(fontSize: 15),
+                      ),
+                      SizedBox(
+                        height: 40,
+                      ),
+                      Material(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(40)),
+                        elevation: 18.0,
+                        color: Color(0xFF4CAF50),
+                        clipBehavior: Clip.antiAlias,
+                        child: MaterialButton(
+                            minWidth: MediaQuery.of(context).size.width / 1.5,
+                            height: 50,
+                            color: Color(0xFF4CAF50),
+                            child: new Text('Login'.toUpperCase(),
+                                style: new TextStyle(
+                                    fontSize: 16.0, color: Colors.white)),
+                            onPressed: () {
+                              _submit(usernameController.text,
+                                  passwordController.text);
+                            }),
+                      ),
+                      Padding(
+                          padding: const EdgeInsets.only(top: 16),
+                          child: Material(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(40)),
+                            elevation: 18.0,
+                            color: Color(0xFF4CAF50),
+                            clipBehavior: Clip.antiAlias,
+                            child: MaterialButton(
+                              minWidth: MediaQuery.of(context).size.width / 1.5,
+                              height: 50,
+                              color: Colors.white,
+                              child: new Text('Create an Account'.toUpperCase(),
+                                  style: new TextStyle(
+                                      fontSize: 14.0, color: Colors.green)),
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => SignUp(),
+                                  ),
+                                );
+                              },
+                            ),
+                          )),
+                    ],
+                  ),
+                ),
+              ]),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -216,7 +222,7 @@ class _LoginPageState extends State<LoginPage> {
             alignment: Alignment.bottomCenter,
             children: <Widget>[
               Image.asset(
-                'images/applogo.png',
+                'images/logo.png',
                 width: MediaQuery.of(context).size.width / 2.4,
               ),
               HomeScreenTopPart(),

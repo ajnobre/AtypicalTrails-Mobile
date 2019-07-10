@@ -38,14 +38,6 @@ class _SignUpState extends State<SignUp> {
       User user = new User(username, email, password, "", 0);
       response = await ServerApi().signUpUser(user);
       if (response.statusCode == 200) {
-        /* var alertDialog = AlertDialog(
-          title: Text("User successfully registered"),
-        );
-        showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return alertDialog;
-            }); */
         _isInvalidAsyncUser = false;
         _isInvalidAsyncEmail = false;
       } else if (response.statusCode == 403) {
@@ -143,183 +135,185 @@ class _SignUpState extends State<SignUp> {
   register() {
     return Form(
       key: _formKey,
-      child: ListView(children: <Widget>[
-        Padding(
-          padding: EdgeInsets.only(
-              top: MediaQuery.of(context).size.height / 5,
-              left: 40,
-              right: 40,
-              bottom: 0),
-        ),
-        Container(
-          child: Column(children: <Widget>[
-            Container(
-              padding: EdgeInsets.only(left: 30, right: 30),
-              height: 300,
-              child: Column(
-                children: <Widget>[
-                  TextFormField(
-                    autofocus: true,
-                    keyboardType: TextInputType.text,
-                    controller: usernameController,
-                    decoration: InputDecoration(
-                      filled: true,
-                      labelText: "Username",
-                      labelStyle: TextStyle(
-                        color: Colors.black45,
-                        fontWeight: FontWeight.w400,
-                        fontSize: 20,
+      child: SingleChildScrollView(
+        child: Column(children: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(
+                top: MediaQuery.of(context).size.height / 5,
+                left: 40,
+                right: 40,
+                bottom: 0),
+          ),
+          Container(
+            child: Column(children: <Widget>[
+              Container(
+                padding: EdgeInsets.only(top: 0, left: 30, right: 30),
+                height: MediaQuery.of(context).size.height,
+                child: Column(
+                  children: <Widget>[
+                    TextFormField(
+                      autofocus: true,
+                      keyboardType: TextInputType.text,
+                      controller: usernameController,
+                      decoration: InputDecoration(
+                        filled: true,
+                        labelText: "Username",
+                        labelStyle: TextStyle(
+                          color: Colors.black45,
+                          fontWeight: FontWeight.w400,
+                          fontSize: 20,
+                        ),
+                        fillColor: Colors.white,
+                        border: new OutlineInputBorder(
+                          borderRadius: new BorderRadius.circular(13.0),
+                          borderSide: new BorderSide(),
+                        ),
                       ),
-                      fillColor: Colors.white,
-                      border: new OutlineInputBorder(
-                        borderRadius: new BorderRadius.circular(13.0),
-                        borderSide: new BorderSide(),
+                      style: TextStyle(fontSize: 15),
+                      validator: (String value) {
+                        if (value.isEmpty) {
+                          return 'Please enter your username';
+                        }
+                        if (_isInvalidAsyncUser) {
+                          _isInvalidAsyncUser = false;
+                          return "Username already in use.";
+                        }
+                        return null;
+                      },
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    TextFormField(
+                      autofocus: true,
+                      keyboardType: TextInputType.text,
+                      controller: emailController,
+                      decoration: InputDecoration(
+                        filled: true,
+                        labelText: "Email",
+                        labelStyle: TextStyle(
+                          color: Colors.black45,
+                          fontWeight: FontWeight.w400,
+                          fontSize: 20,
+                        ),
+                        fillColor: Colors.white,
+                        border: new OutlineInputBorder(
+                          borderRadius: new BorderRadius.circular(13.0),
+                          borderSide: new BorderSide(),
+                        ),
+                      ),
+                      style: TextStyle(fontSize: 15),
+                      validator: (String value) {
+                        if (value.isEmpty) {
+                          return 'Please enter your email';
+                        }
+                        if (!isEmail(value)) {
+                          return "Please enter a valid email";
+                        }
+                        if (_isInvalidAsyncEmail) {
+                          _isInvalidAsyncEmail = false;
+                          return "Email already in use.";
+                        }
+                        return null;
+                      },
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    TextFormField(
+                      autofocus: true,
+                      obscureText: true,
+                      keyboardType: TextInputType.emailAddress,
+                      controller: passwordController,
+                      decoration: InputDecoration(
+                        filled: true,
+                        labelText: "Password",
+                        labelStyle: TextStyle(
+                          color: Colors.black45,
+                          fontWeight: FontWeight.w400,
+                          fontSize: 20,
+                        ),
+                        fillColor: Colors.white,
+                        border: new OutlineInputBorder(
+                          borderRadius: new BorderRadius.circular(13.0),
+                          borderSide: new BorderSide(),
+                        ),
+                      ),
+                      validator: (String value) {
+                        if (value.isEmpty) {
+                          return 'Please enter your password';
+                        }
+                      },
+                      style: TextStyle(fontSize: 15),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    TextFormField(
+                      autofocus: true,
+                      obscureText: true,
+                      keyboardType: TextInputType.emailAddress,
+                      controller: passwordConfController,
+                      decoration: InputDecoration(
+                        filled: true,
+                        labelText: "Confirm Password",
+                        labelStyle: TextStyle(
+                          color: Colors.black45,
+                          fontWeight: FontWeight.w400,
+                          fontSize: 20,
+                        ),
+                        fillColor: Colors.white,
+                        border: new OutlineInputBorder(
+                          borderRadius: new BorderRadius.circular(13.0),
+                          borderSide: new BorderSide(),
+                        ),
+                      ),
+                      validator: (String value) {
+                        if (value.isEmpty) {
+                          return 'Please confirm your password';
+                        }
+                        if (passwordController.text.compareTo(value) != 0) {
+                          return "Passwords don't match";
+                        }
+                        if (value.length < 8) {
+                          return 'Password should be longer than 7 characters';
+                        }
+                      },
+                      style: TextStyle(fontSize: 15),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 16),
+                      child: Material(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(40)),
+                        elevation: 18.0,
+                        color: Color(0xFF4CAF50),
+                        clipBehavior: Clip.antiAlias,
+                        child: MaterialButton(
+                          minWidth: MediaQuery.of(context).size.width / 1.5,
+                          height: 40,
+                          color: Color(0xFF4CAF50),
+                          child: new Text('Register'.toUpperCase(),
+                              style: new TextStyle(
+                                  fontSize: 16.0, color: Colors.white)),
+                          onPressed: () {
+                            _submit(
+                                usernameController.text,
+                                emailController.text,
+                                passwordController.text,
+                                passwordConfController.text,
+                                context);
+                          },
+                        ),
                       ),
                     ),
-                    style: TextStyle(fontSize: 15),
-                    validator: (String value) {
-                      if (value.isEmpty) {
-                        return 'Please enter your username';
-                      }
-                      if (_isInvalidAsyncUser) {
-                        _isInvalidAsyncUser = false;
-                        return "Username already in use.";
-                      }
-                      return null;
-                    },
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  TextFormField(
-                    autofocus: true,
-                    keyboardType: TextInputType.text,
-                    controller: emailController,
-                    decoration: InputDecoration(
-                      filled: true,
-                      labelText: "Email",
-                      labelStyle: TextStyle(
-                        color: Colors.black45,
-                        fontWeight: FontWeight.w400,
-                        fontSize: 20,
-                      ),
-                      fillColor: Colors.white,
-                      border: new OutlineInputBorder(
-                        borderRadius: new BorderRadius.circular(13.0),
-                        borderSide: new BorderSide(),
-                      ),
-                    ),
-                    style: TextStyle(fontSize: 15),
-                    validator: (String value) {
-                      if (value.isEmpty) {
-                        return 'Please enter your email';
-                      }
-                      if (!isEmail(value)) {
-                        return "Please enter a valid email";
-                      }
-                      if (_isInvalidAsyncEmail) {
-                        _isInvalidAsyncEmail = false;
-                        return "Email already in use.";
-                      }
-                      return null;
-                    },
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  TextFormField(
-                    autofocus: true,
-                    obscureText: true,
-                    keyboardType: TextInputType.emailAddress,
-                    controller: passwordController,
-                    decoration: InputDecoration(
-                      filled: true,
-                      labelText: "Password",
-                      labelStyle: TextStyle(
-                        color: Colors.black45,
-                        fontWeight: FontWeight.w400,
-                        fontSize: 20,
-                      ),
-                      fillColor: Colors.white,
-                      border: new OutlineInputBorder(
-                        borderRadius: new BorderRadius.circular(13.0),
-                        borderSide: new BorderSide(),
-                      ),
-                    ),
-                    validator: (String value) {
-                      if (value.isEmpty) {
-                        return 'Please enter your password';
-                      }
-                    },
-                    style: TextStyle(fontSize: 15),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  TextFormField(
-                    autofocus: true,
-                    obscureText: true,
-                    keyboardType: TextInputType.emailAddress,
-                    controller: passwordConfController,
-                    decoration: InputDecoration(
-                      filled: true,
-                      labelText: "Confirm Password",
-                      labelStyle: TextStyle(
-                        color: Colors.black45,
-                        fontWeight: FontWeight.w400,
-                        fontSize: 20,
-                      ),
-                      fillColor: Colors.white,
-                      border: new OutlineInputBorder(
-                        borderRadius: new BorderRadius.circular(13.0),
-                        borderSide: new BorderSide(),
-                      ),
-                    ),
-                    validator: (String value) {
-                      if (value.isEmpty) {
-                        return 'Please confirm your password';
-                      }
-                      if (passwordController.text.compareTo(value) != 0) {
-                        return "Passwords don't match";
-                      }
-                      if (value.length < 8) {
-                        return 'Password should be longer than 7 characters';
-                      }
-                    },
-                    style: TextStyle(fontSize: 15),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 16),
-              child: Material(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(40)),
-                elevation: 18.0,
-                color: Color(0xFF4CAF50),
-                clipBehavior: Clip.antiAlias,
-                child: MaterialButton(
-                  minWidth: MediaQuery.of(context).size.width / 1.5,
-                  height: 40,
-                  color: Color(0xFF4CAF50),
-                  child: new Text('Register'.toUpperCase(),
-                      style:
-                          new TextStyle(fontSize: 16.0, color: Colors.white)),
-                  onPressed: () {
-                    _submit(
-                        usernameController.text,
-                        emailController.text,
-                        passwordController.text,
-                        passwordConfController.text,
-                        context);
-                  },
+                  ],
                 ),
               ),
-            ),
-          ]),
-        ),
-      ]),
+            ]),
+          ),
+        ]),
+      ),
     );
   }
 }

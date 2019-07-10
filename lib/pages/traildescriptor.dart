@@ -365,7 +365,7 @@ class StoreMap extends StatelessWidget {
     Set<Polyline> polylines = points[1];
     return GoogleMap(
       initialCameraPosition:
-          CameraPosition(target: markers.elementAt(0).position, zoom: 13),
+          CameraPosition(target: markers.elementAt(0).position, zoom: 17),
       markers: markers,
       polylines: polylines,
     );
