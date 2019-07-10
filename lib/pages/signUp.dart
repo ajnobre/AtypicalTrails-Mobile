@@ -38,14 +38,14 @@ class _SignUpState extends State<SignUp> {
       User user = new User(username, email, password, "", 0);
       response = await ServerApi().signUpUser(user);
       if (response.statusCode == 200) {
-        var alertDialog = AlertDialog(
+        /* var alertDialog = AlertDialog(
           title: Text("User successfully registered"),
         );
         showDialog(
             context: context,
             builder: (BuildContext context) {
               return alertDialog;
-            });
+            }); */
         _isInvalidAsyncUser = false;
         _isInvalidAsyncEmail = false;
       } else if (response.statusCode == 403) {
@@ -57,14 +57,37 @@ class _SignUpState extends State<SignUp> {
 
     setState(() {
       if (_formKey.currentState.validate()) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => LoginPage(),
-          ),
-        );
+        _showDialog(context);
       }
     });
+  }
+
+  void _showDialog(context) {
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text("User registered successfully"),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+
+            new FlatButton(
+              child: new Text("OK"),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => LoginPage(),
+                  ),
+                );
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   bool validInfo(
@@ -73,6 +96,7 @@ class _SignUpState extends State<SignUp> {
         password.isEmpty ||
         email.isEmpty ||
         !isEmail(email) ||
+        password.length < 7 ||
         (password.compareTo(passwordConf) != 0) ||
         passwordConf.isEmpty));
   }
@@ -257,6 +281,9 @@ class _SignUpState extends State<SignUp> {
                       }
                       if (passwordController.text.compareTo(value) != 0) {
                         return "Passwords don't match";
+                      }
+                      if (value.length < 8) {
+                        return 'Password should be longer than 7 characters';
                       }
                     },
                     style: TextStyle(fontSize: 15),

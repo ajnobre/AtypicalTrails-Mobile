@@ -37,7 +37,7 @@ class _LoginPageState extends State<LoginPage> {
   Future _submit(String username, String password) async {
     if (!(username.isEmpty || password.isEmpty)) {
       await sharedPrefs.saveStartTime();
-      response = await logout.logout();
+      //response = await logout.logout();
       User user = new User(username, "", password, "", 0);
       response = await ServerApi().loginUser(user);
 

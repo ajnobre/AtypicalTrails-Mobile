@@ -59,15 +59,21 @@ class _CommentsPageState extends State<CommentsPage> {
         width: 0,
       );
     } else
-      return ListView.builder(
-        padding: const EdgeInsets.all(16.0),
-        itemCount: trailList.length,
-        itemBuilder: (context, i) {
-          if (i < trailList.length) {
-            return _buildRow(trailList[i]['propertyMap']);
-          }
-          return null;
-        },
+      return Column(
+        children: <Widget>[
+          Flexible(
+            child: ListView.builder(
+              padding: const EdgeInsets.all(16.0),
+              itemCount: trailList.length,
+              itemBuilder: (context, i) {
+                if (i < trailList.length) {
+                  return _buildRow(trailList[i]['propertyMap']);
+                }
+                return null;
+              },
+            ),
+          ),
+        ],
       );
   }
 
