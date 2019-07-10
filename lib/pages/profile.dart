@@ -1,7 +1,10 @@
 import 'package:atypical/elements/drawer.dart';
+import 'package:atypical/pages/ranking.dart';
+import 'package:atypical/pages/trailsdone.dart';
 
 import 'package:atypical/requests/user.dart';
 import 'package:atypical/serverApi/serverApi.dart';
+import 'package:atypical/utils/sharedpreferences.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
@@ -30,6 +33,7 @@ class _ProfileContentState extends State<ProfileContent> {
 
   Map<String, dynamic> receivedList;
   ServerApi serverApi = new ServerApi();
+  SharedPrefs sharedPrefs = new SharedPrefs();
 
   @override
   Widget build(BuildContext context) {
@@ -69,19 +73,9 @@ class _ProfileContentState extends State<ProfileContent> {
     );
   }
 
-  Future<String> getUsername() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString("username");
-  }
-
-  Future<String> getToken() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString("token");
-  }
-
   Future _fetchData() async {
-    String username = await getUsername();
-    String tokenID = await getToken();
+    String username = await sharedPrefs.getUsername();
+    String tokenID = await sharedPrefs.getToken();
     ServerApi serverApi = new ServerApi();
     User user = new User(username, "", "", tokenID, 0);
 
@@ -325,6 +319,24 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
                                 )
                               ],
                             ),
+                          ],
+                        ),
+                        Row(
+                          children: <Widget>[
+                            FlatButton(
+                              color: Colors.white,
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => TrailsDone(),
+                                  ),
+                                );
+                              },
+                              child: Text(
+                                "Trails Done",
+                              ),
+                            )
                           ],
                         ),
                         //SizedBox(width: 16,)

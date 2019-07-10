@@ -51,4 +51,7 @@ class ServerApi {
     Map<String, dynamic> r = {"offset": offset, "codeName": codeName};
     return await post("trails/getTrailComments", r);
   }
+    Future<Response> getTrailsDone(User user) async {
+    return await post("user/getTrailsDone", user.toJson());
+  }
 }

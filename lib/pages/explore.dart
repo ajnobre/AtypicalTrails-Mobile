@@ -96,9 +96,7 @@ class _ExploreContentState extends State<ExploreContent> {
     );
   }
 
-  Widget buildText(String s) {
-    return Text(s);
-  }
+
 
   Future<dynamic> _getData() async {
     List<dynamic> values, values1;
