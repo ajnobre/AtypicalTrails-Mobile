@@ -90,9 +90,8 @@ class _CommentsPageState extends State<CommentsPage> {
               ),
             ],
           ),
-          SizedBox(
-            width: 20,
-          ),
+
+
           Wrap(children: <Widget>[getText(trail['Comment'])]),
           SizedBox(
             width: 20,

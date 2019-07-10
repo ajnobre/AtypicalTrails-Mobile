@@ -24,6 +24,10 @@
 	<true/>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+    <string>${PRODUCT_NAME} Use location always</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+    <string>${PRODUCT_NAME} WhenInUse Location</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
 	<key>UISupportedInterfaceOrientations</key>

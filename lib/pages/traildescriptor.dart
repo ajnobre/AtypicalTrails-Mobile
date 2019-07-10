@@ -233,7 +233,8 @@ class _TrailDescState extends State<TrailDesc> {
                   ],
                 ),
                 Text(
-                  'Difficulty: ' + widget.data['Level'].toString(),
+                  'Difficulty: ' +
+                      getDifficulty(widget.data['Level'].toString()),
                   style: TextStyle(
                     color: Colors.grey[500],
                   ),
@@ -297,10 +298,10 @@ class _TrailDescState extends State<TrailDesc> {
 
     Widget textSection = Container(
       padding: const EdgeInsets.all(32),
-/*       child: Text(
-        "COMEMTARIOS",
-        softWrap: true,
-      ), */
+      /*       child: Text(
+                          "COMEMTARIOS",
+                          softWrap: true,
+                        ), */
     );
 
     return MaterialApp(
@@ -326,6 +327,25 @@ class _TrailDescState extends State<TrailDesc> {
         ),
       ),
     );
+  }
+
+  String getDifficulty(String difficulty) {
+    switch (difficulty) {
+      case "1":
+        return 'Easy';
+        break;
+      case "2":
+        return 'Medium';
+        break;
+      case "3":
+        return 'Hard';
+        break;
+      case "4":
+        return 'Chuck Norris';
+        break;
+      default:
+        return 'error';
+    }
   }
 }
 
