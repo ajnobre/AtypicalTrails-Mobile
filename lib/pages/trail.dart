@@ -92,7 +92,6 @@ class MapSampleState extends State<MapSample> {
               bottom: 50,
               left: 10,
               child: Slider(
-                
                 min: 12,
                 max: 19,
                 divisions: 4,
@@ -109,7 +108,7 @@ class MapSampleState extends State<MapSample> {
                   child: FloatingActionButton.extended(
                     backgroundColor: Colors.red,
                     label: Text('Finish'),
-                    onPressed: _goToTheLake,
+                    onPressed: _finishButtonHandler,
                   ),
                 )),
           ],
@@ -118,17 +117,23 @@ class MapSampleState extends State<MapSample> {
     );
   }
 
-  Future<void> _goToTheLake() async {
+  Future<void> _finishButtonHandler() async {
+    currentLocation = await location.getLocation();
     dist = calculateDistance(
         currentLocation.latitude,
         currentLocation.longitude,
         finishPosition.latitude,
         finishPosition.longitude);
-    location.getLocation().then((recLoc) {
+/*     location.getLocation().then((recLoc) {
       setState(() {
         currentLocation = recLoc;
       });
-    });
+      dist = calculateDistance(
+          currentLocation.latitude,
+          currentLocation.longitude,
+          finishPosition.latitude,
+          finishPosition.longitude);
+    }); */
     if (dist < 0.035) {
       _showDialogSuccess(context);
     } else {
