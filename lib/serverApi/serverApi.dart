@@ -31,7 +31,7 @@ class ServerApi {
 
   Future getAllTrails(int offset) async {
     Map<String, dynamic> r = {"offset": offset};
-    return await post("trails/getAllTrails", r);
+    return await post("trails/getAllPublicTrails", r);
   }
 
   Future addToFinished(Trail trail) async {

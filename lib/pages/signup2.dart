@@ -82,26 +82,6 @@ class _SignUpState extends State<SignUp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: _body(),
-    );
-  }
-
-  _body() {
-    return Scaffold(
-        backgroundColor: Colors.white,
-        body: Stack(
-          children: <Widget>[
-            //AQUI TROCAR ENTRE (BackgroundLogin(), Login()) ou (BackgroundRegister(), Register()
-            backgroudRegister(),
-            register(),
-          ],
-        ));
-  }
-/* 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
       backgroundColor: Colors.green[200],
       body: Form(
         key: _formKey,
@@ -342,7 +322,7 @@ class _SignUpState extends State<SignUp> {
         ),
       ),
     );
-  } */
+  }
 
   backgroudRegister() {
     return Scaffold(
@@ -353,7 +333,7 @@ class _SignUpState extends State<SignUp> {
             alignment: Alignment.bottomCenter,
             children: <Widget>[
               Image.asset(
-                'images/applogo.png',
+                'images/logo.png',
                 width: MediaQuery.of(context).size.width / 2.4,
               ),
               HomeScreenTopPart(),
@@ -365,190 +345,109 @@ class _SignUpState extends State<SignUp> {
   }
 
   register() {
-    return Form(
-      key: _formKey,
-      child: ListView(
-          /* padding:
-                EdgeInsets.only(top: MediaQuery.of(context).size.height / 2.6), */
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.only(
-                  top: MediaQuery.of(context).size.height / 5,
-                  left: 40,
-                  right: 40,
-                  bottom: 0),
-            ),
-            Container(
-/*               height: MediaQuery.of(context).size.height / 2,
-                width: MediaQuery.of(context).size.width, */
-              child: Column(children: <Widget>[
-                Container(
-                  padding: EdgeInsets.only(left: 30, right: 30),
-                  height: 300,
-                  child: Column(
-                    children: <Widget>[
-                      TextFormField(
-                        autofocus: true,
-                        keyboardType: TextInputType.text,
-                        controller: usernameController,
-                        decoration: InputDecoration(
-                          filled: true,
-                          labelText: "Username",
-                          labelStyle: TextStyle(
-                            color: Colors.black45,
-                            fontWeight: FontWeight.w400,
-                            fontSize: 20,
-                          ),
-                          fillColor: Colors.white,
-                          border: new OutlineInputBorder(
-                            borderRadius: new BorderRadius.circular(13.0),
-                            borderSide: new BorderSide(),
-                          ),
-                        ),
-                        style: TextStyle(fontSize: 15),
-                        validator: (String value) {
-                          if (value.isEmpty) {
-                            return 'Please enter your username';
-                          }
-                          if (_isInvalidAsyncUser) {
-                            _isInvalidAsyncUser = false;
-                            return "Username already in use.";
-                          }
-                          return null;
-                        },
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      TextFormField(
-                        autofocus: true,
-                        keyboardType: TextInputType.text,
-                        controller: emailController,
-                        decoration: InputDecoration(
-                          filled: true,
-                          labelText: "Email",
-                          labelStyle: TextStyle(
-                            color: Colors.black45,
-                            fontWeight: FontWeight.w400,
-                            fontSize: 20,
-                          ),
-                          fillColor: Colors.white,
-                          border: new OutlineInputBorder(
-                            borderRadius: new BorderRadius.circular(13.0),
-                            borderSide: new BorderSide(),
-                          ),
-                        ),
-                        style: TextStyle(fontSize: 15),
-                        validator: (String value) {
-                          if (value.isEmpty) {
-                            return 'Please enter your email';
-                          }
-                          if (!isEmail(value)) {
-                            return "Please enter a valid email";
-                          }
-                          if (_isInvalidAsyncEmail) {
-                            _isInvalidAsyncEmail = false;
-                            return "Email already in use.";
-                          }
-                          return null;
-                        },
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      TextFormField(
-                        autofocus: true,
-                        obscureText: true,
-                        keyboardType: TextInputType.emailAddress,
-                        controller: passwordController,
-                        decoration: InputDecoration(
-                          filled: true,
-                          labelText: "Password",
-                          labelStyle: TextStyle(
-                            color: Colors.black45,
-                            fontWeight: FontWeight.w400,
-                            fontSize: 20,
-                          ),
-                          fillColor: Colors.white,
-                          border: new OutlineInputBorder(
-                            borderRadius: new BorderRadius.circular(13.0),
-                            borderSide: new BorderSide(),
-                          ),
-                        ),
-                        validator: (String value) {
-                          if (value.isEmpty) {
-                            return 'Please enter your password';
-                          }
-                          if (value.length < 8) {
-                            return 'Password should be longer than 7 characters';
-                          }
-                        },
-                        style: TextStyle(fontSize: 15),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      TextFormField(
-                        autofocus: true,
-                        obscureText: true,
-                        keyboardType: TextInputType.emailAddress,
-                        controller: passwordConfController,
-                        decoration: InputDecoration(
-                          filled: true,
-                          labelText: "Confirm Password",
-                          labelStyle: TextStyle(
-                            color: Colors.black45,
-                            fontWeight: FontWeight.w400,
-                            fontSize: 20,
-                          ),
-                          fillColor: Colors.white,
-                          border: new OutlineInputBorder(
-                            borderRadius: new BorderRadius.circular(13.0),
-                            borderSide: new BorderSide(),
-                          ),
-                        ),
-                        validator: (String value) {
-                          if (value.isEmpty) {
-                            return 'Please confirm your password';
-                          }
-                          if (passwordController.text.compareTo(value) != 0) {
-                            return "Passwords don't match";
-                          }
-                        },
-                        style: TextStyle(fontSize: 15),
-                      ),
-                    ],
-                  ),
+    return ListView(
+        padding: EdgeInsets.only(top: MediaQuery.of(context).size.height / 2.6),
+        children: <Widget>[
+          Container(
+            height: MediaQuery.of(context).size.height / 2,
+            width: MediaQuery.of(context).size.width,
+            child: Column(children: <Widget>[
+              Container(
+                width: MediaQuery.of(context).size.width / 1.5,
+                height: 50,
+                padding:
+                    EdgeInsets.only(top: 4, left: 16, right: 16, bottom: 4),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(40)),
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(color: Colors.black12, blurRadius: 5)
+                    ]),
+                child: TextField(
+                  decoration: InputDecoration(
+                      border: InputBorder.none,
+                      icon: Icon(Icons.account_circle),
+                      hintText: 'Username'),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 16),
-                  child: Material(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(40)),
-                    elevation: 18.0,
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width / 1.5,
+                height: 50,
+                margin: EdgeInsets.only(top: 25),
+                padding:
+                    EdgeInsets.only(top: 4, left: 16, right: 16, bottom: 4),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(40)),
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(color: Colors.black12, blurRadius: 5)
+                    ]),
+                child: TextField(
+                  decoration: InputDecoration(
+                      border: InputBorder.none,
+                      icon: Icon(Icons.email),
+                      hintText: 'Email'),
+                ),
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width / 1.5,
+                height: 50,
+                margin: EdgeInsets.only(top: 25),
+                padding:
+                    EdgeInsets.only(top: 4, left: 16, right: 16, bottom: 4),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(40)),
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(color: Colors.black12, blurRadius: 5)
+                    ]),
+                child: TextField(
+                  decoration: InputDecoration(
+                      border: InputBorder.none,
+                      icon: Icon(Icons.vpn_key),
+                      hintText: 'Password'),
+                ),
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width / 1.5,
+                height: 50,
+                margin: EdgeInsets.only(top: 25),
+                padding:
+                    EdgeInsets.only(top: 4, left: 16, right: 16, bottom: 4),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(40)),
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(color: Colors.black12, blurRadius: 5)
+                    ]),
+                child: TextField(
+                  decoration: InputDecoration(
+                      border: InputBorder.none,
+                      icon: Icon(Icons.vpn_key),
+                      hintText: 'Confirm Password'),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 16),
+                child: Material(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(40)),
+                  elevation: 18.0,
+                  color: Color(0xFF4CAF50),
+                  clipBehavior: Clip.antiAlias,
+                  child: MaterialButton(
+                    minWidth: MediaQuery.of(context).size.width / 1.5,
+                    height: 50,
                     color: Color(0xFF4CAF50),
-                    clipBehavior: Clip.antiAlias,
-                    child: MaterialButton(
-                      minWidth: MediaQuery.of(context).size.width / 1.5,
-                      height: 40,
-                      color: Color(0xFF4CAF50),
-                      child: new Text('Register'.toUpperCase(),
-                          style: new TextStyle(
-                              fontSize: 16.0, color: Colors.white)),
-                      onPressed: () {
-                        _submit(
-                            usernameController.text,
-                            emailController.text,
-                            passwordController.text,
-                            passwordConfController.text,
-                            context);
-                      },
-                    ),
+                    child: new Text('Register'.toUpperCase(),
+                        style:
+                            new TextStyle(fontSize: 16.0, color: Colors.white)),
+                    onPressed: () {},
                   ),
                 ),
-              ]),
-            ),
-          ]),
-    );
+              ),
+            ]),
+          ),
+        ]);
   }
 }

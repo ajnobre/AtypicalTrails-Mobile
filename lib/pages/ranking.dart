@@ -63,11 +63,42 @@ class _RankingPageState extends State<MyRankingPage> {
 
   Widget _buildRow(Map<String, dynamic> trail) {
     return FlatButton(
-      child: ListTile(
-        title: Text(
-          trail['name'],
-          style: _biggerFont,
-        ),
+      child: Row(
+        children: /* <Widget>[
+          Text(
+            trail['name'],
+            style: _biggerFont,
+          ),
+          Text(
+            trail['points'].toString(),
+            style: _biggerFont,
+          ),
+        ], */
+            <Widget>[
+          Row(
+            children: <Widget>[
+              CircleAvatar(
+                backgroundColor: Colors.transparent,
+                backgroundImage: getImage(trail),
+              ),
+              SizedBox(
+                width: 10.0,
+                height: 2.0,
+              ),
+              Text(trail['name']),
+            ],
+          ),
+          SizedBox(
+            width: 20,
+          ),
+          Row(children: <Widget>[
+            Text('Points'),
+            SizedBox(
+              width: 5.0,
+            ),
+            Text(trail['points'].toString())
+          ]),
+        ],
       ),
       onPressed: () {},
     );
@@ -80,9 +111,9 @@ class _RankingPageState extends State<MyRankingPage> {
       padding: const EdgeInsets.all(16.0),
       itemCount: rankingList.length,
       itemBuilder: (context, i) {
-/*         if (i < rankingList.length) {
-          _contents.add(rankingList[i]);
-        } */
+        /*         if (i < rankingList.length) {
+                          _contents.add(rankingList[i]);
+                        } */
 
         if (i < rankingList.length) {
           return _buildRow(rankingList[i]);
@@ -91,4 +122,13 @@ class _RankingPageState extends State<MyRankingPage> {
       },
     );
   }
+
+  ImageProvider getImage(Map<String, dynamic> trail) {
+    if (trail['photo'] != null) {
+      return NetworkImage(trail['photo']);
+    } else {
+      return AssetImage('images/applogo.png');
+    }
+  }
+  
 }

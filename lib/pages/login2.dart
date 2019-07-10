@@ -80,7 +80,7 @@ class _LoginPageState extends State<LoginPage> {
           //padding: EdgeInsets.only(top: 100, left: 40, right: 40),
           //color: Colors.green[200],
           child: Padding(
-            padding: EdgeInsets.only(top: 100, left: 40, right: 40),
+            padding: EdgeInsets.only(top: 120, left: 40, right: 40),
             child: ListView(
               children: <Widget>[
                 SizedBox(
@@ -92,7 +92,7 @@ class _LoginPageState extends State<LoginPage> {
                   height: 30,
                 ),
                 Container(
-                  height: 200,
+                  height: 220,
                   child: Column(
                     children: <Widget>[
                       TextFormField(

@@ -3,6 +3,8 @@ import 'dart:collection';
 import 'dart:convert';
 import 'package:atypical/pages/explore.dart';
 import 'package:atypical/pages/trail.dart';
+import 'package:atypical/serverApi/serverApi.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
 
 import 'package:flutter/material.dart';
@@ -26,6 +28,18 @@ class _TrailDescState extends State<TrailDesc> {
   var location = new Location();
   LatLng startPosition;
   LatLng finishPosition;
+  ServerApi serverApi = new ServerApi();
+  List<dynamic> comments;
+
+/*   void initState() async {
+    super.initState();
+    Response response =
+        await serverApi.getTrailComments(0, widget.data['CodeName']);
+    setState(() {
+      comments = response.data;
+    });
+  } */
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -268,10 +282,10 @@ class _TrailDescState extends State<TrailDesc> {
 
     Widget textSection = Container(
       padding: const EdgeInsets.all(32),
-      child: Text(
-        'COMENTÁRIOS',
+/*       child: Text(
+        "COMEMTARIOS",
         softWrap: true,
-      ),
+      ), */
     );
 
     return MaterialApp(
@@ -298,6 +312,8 @@ class _TrailDescState extends State<TrailDesc> {
       ),
     );
   }
+
+
 }
 
 void _showDialog(context) {
