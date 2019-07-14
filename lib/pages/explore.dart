@@ -29,7 +29,7 @@ class _ExploreContentState extends State<ExploreContent> {
   Response response;
   final _suggestions = <Text>[];
   final _contents = <Map<String, dynamic>>[];
-  final _biggerFont = const TextStyle(fontSize: 18.0);
+  final _biggerFont = const TextStyle(fontSize: 18.0, color: Colors.white);
   List<dynamic> receivedList;
   ServerApi serverApi = new ServerApi();
 
@@ -123,10 +123,10 @@ class _ExploreContentState extends State<ExploreContent> {
     List<dynamic> trailList = snapshot.data;
     return GridView.builder(
       gridDelegate: new SliverGridDelegateWithMaxCrossAxisExtent(
-          maxCrossAxisExtent: 200.0,
+          maxCrossAxisExtent: 200,
           mainAxisSpacing: 0.0,
           crossAxisSpacing: 0.0,
-          childAspectRatio: 0.75),
+          childAspectRatio: 0.85),
       itemCount: trailList.length,
       itemBuilder: (context, i) {
         if (i >= _suggestions.length) {
@@ -146,11 +146,11 @@ class _ExploreContentState extends State<ExploreContent> {
     return FlatButton(
       child: Stack(
         children: <Widget>[
-          getImage(trail['Photo']),
+          imageBuilder(trail['Photo']),
           ListTile(
             title: Text(
               trail['Name'],
-              style: _biggerFont,
+              style: TextStyle(fontSize: 18.0, color: Colors.white),
             ),
           ),
         ],
@@ -162,16 +162,25 @@ class _ExploreContentState extends State<ExploreContent> {
     );
   }
 
-  getImage(String url) {
-    if (url == null) {
-      return Image.asset(
-        'images/trailStock.png',
-        fit: BoxFit.scaleDown,
-      );
-    } else
-      return Image.network(
-        url,
-        fit: BoxFit.scaleDown,
-      );
+  imageBuilder(String url) {
+    ImageProvider<dynamic> image = AssetImage('images/trailStock.png');
+    if (url != null) {
+      image = NetworkImage(url);
+    }
+
+    return Container(
+      foregroundDecoration: new BoxDecoration(
+        image: DecorationImage(image: image, fit: BoxFit.cover),
+      ),
+/*       decoration: const BoxDecoration(
+        image: DecorationImage(
+            alignment: Alignment(-.2, 0),
+            image: NetworkImage(
+                'http://www.naturerights.com/blog/wp-content/uploads/2017/12/Taranaki-NR-post-1170x550.png'),
+            fit: BoxFit.cover),
+      ), */
+      alignment: Alignment.bottomCenter,
+      padding: EdgeInsets.only(bottom: 20),
+    );
   }
 }

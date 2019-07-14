@@ -118,7 +118,7 @@ class _TrailDescState extends State<TrailDesc> {
   String _getCategory() {
     List categories = json.decode(widget.data['Category']);
     String res = categories[0];
-    for (int i = 1; i < categories.length - 1; i++) {
+    for (int i = 1; i < categories.length; i++) {
       res += ', ' + categories[1].toString();
     }
 
@@ -356,7 +356,7 @@ void _showDialog(context, double dist) {
     builder: (BuildContext context) {
       // return object of type Dialog
       return AlertDialog(
-        title: new Text("Can't initialize trail"),
+        title: new Text("Can't start trail"),
         content: new Text("You are " +
             (dist * 1000).round().toString() +
             " meters away from the starting point."),
