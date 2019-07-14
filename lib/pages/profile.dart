@@ -215,8 +215,7 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
                               shape: BoxShape.circle,
                               image: DecorationImage(
                                   fit: BoxFit.cover,
-                                  image: NetworkImage(
-                                      getImage(receivedMap['Photo'])))),
+                                  image: getImage(receivedMap['Photo']))),
                         ),
                         SizedBox(
                           height: 16,
@@ -337,11 +336,11 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
     );
   }
 
-  String getImage(receivedMap) {
+  ImageProvider<dynamic> getImage(receivedMap) {
     if (receivedMap == null) {
-      return "https://lh3.googleusercontent.com/6cFAhsyW9uDLFHFM-zLc2mqtOQp-bS42ywO3CWq9-V-3760Fwju-J3HCoe7vXbxSLQjj56U9ZVQfcRohKVtDxrMAszwZJw";
+      return AssetImage('images/userStock.png');
     } else {
-      return receivedMap;
+      return NetworkImage(receivedMap);
     }
   }
 

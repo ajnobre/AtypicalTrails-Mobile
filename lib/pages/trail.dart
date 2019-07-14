@@ -24,7 +24,7 @@ class MapSampleState extends State<MapSample> {
   static double zoomCons = 30.0;
   MapType _currentMapType = MapType.normal;
 
-  /* GoogleMapController _mapController; */
+
 
   static LocationData currentLocation;
   static LatLng startPosition, finishPosition;
@@ -124,16 +124,6 @@ class MapSampleState extends State<MapSample> {
         currentLocation.longitude,
         finishPosition.latitude,
         finishPosition.longitude);
-/*     location.getLocation().then((recLoc) {
-      setState(() {
-        currentLocation = recLoc;
-      });
-      dist = calculateDistance(
-          currentLocation.latitude,
-          currentLocation.longitude,
-          finishPosition.latitude,
-          finishPosition.longitude);
-    }); */
     if (dist < 0.035) {
       _showDialogSuccess(context);
     } else {

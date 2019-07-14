@@ -1,6 +1,7 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPrefs {
+  
   Future setToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString("token", "");

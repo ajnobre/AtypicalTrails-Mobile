@@ -46,7 +46,8 @@ class _ExploreContentState extends State<ExploreContent> {
             if (snapshot.hasError)
               return new Text('Error: ${snapshot.error}');
             else
-              return createListView(context, snapshot);
+              return createGridView(
+                  context, snapshot) /* createListView(context, snapshot) */;
         }
       },
     );
@@ -99,7 +100,7 @@ class _ExploreContentState extends State<ExploreContent> {
     }
   }
 
-  Widget createListView(BuildContext context, AsyncSnapshot snapshot) {
+/*   Widget createListView(BuildContext context, AsyncSnapshot snapshot) {
     List<dynamic> trailList = snapshot.data;
     return ListView.builder(
       padding: const EdgeInsets.all(16.0),
@@ -116,5 +117,61 @@ class _ExploreContentState extends State<ExploreContent> {
         return null;
       },
     );
+  } */
+
+  Widget createGridView(BuildContext context, AsyncSnapshot snapshot) {
+    List<dynamic> trailList = snapshot.data;
+    return GridView.builder(
+      gridDelegate: new SliverGridDelegateWithMaxCrossAxisExtent(
+          maxCrossAxisExtent: 200.0,
+          mainAxisSpacing: 0.0,
+          crossAxisSpacing: 0.0,
+          childAspectRatio: 0.75),
+      itemCount: trailList.length,
+      itemBuilder: (context, i) {
+        if (i >= _suggestions.length) {
+          if (i < trailList.length) {
+            _contents.add(trailList[i]['propertyMap']);
+          }
+        }
+        if (i < trailList.length) {
+          return _buildButton(_contents[i]) /* _buildRow(_contents[i]) */;
+        }
+        return null;
+      },
+    );
+  }
+
+  Widget _buildButton(Map<String, dynamic> trail) {
+    return FlatButton(
+      child: Stack(
+        children: <Widget>[
+          getImage(trail['Photo']),
+          ListTile(
+            title: Text(
+              trail['Name'],
+              style: _biggerFont,
+            ),
+          ),
+        ],
+      ),
+      onPressed: () {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => TrailDesc(data: trail)));
+      },
+    );
+  }
+
+  getImage(String url) {
+    if (url == null) {
+      return Image.asset(
+        'images/trailStock.png',
+        fit: BoxFit.scaleDown,
+      );
+    } else
+      return Image.network(
+        url,
+        fit: BoxFit.scaleDown,
+      );
   }
 }

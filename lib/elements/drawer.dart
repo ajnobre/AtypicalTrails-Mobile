@@ -16,7 +16,6 @@ class NavigationDrawer extends StatelessWidget {
         children: <Widget>[
           DrawerHeader(
             child: Container(
-              
               child: Image.asset('images/logo.png'),
             ),
             decoration: BoxDecoration(
@@ -67,7 +66,7 @@ class NavigationDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            title: Text('LogOut'),
+            title: Text('LOGOUT'),
             onTap: () {
               logout.showDialogLogOut(context);
             },

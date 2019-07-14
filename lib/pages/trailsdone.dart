@@ -74,45 +74,47 @@ class _TrailsDoneState extends State<TrailsDone> {
   }
 
   Widget _buildRow(Map<String, dynamic> trail) {
-    return OutlineButton(
-      borderSide: BorderSide(color: Colors.amber[600]),
-      child: Wrap(
-        children: <Widget>[
-          Row(
+    return Wrap(
+      children: <Widget>[
+        OutlineButton(
+          borderSide: BorderSide(color: Colors.amber[600]),
+          child: Wrap(
             children: <Widget>[
-              Text(
-                'Trail: ',
-                style: TextStyle(fontWeight: FontWeight.bold),
+              Row(
+                children: <Widget>[
+                  Text(
+                    'Trail: ',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  Text(trail['Name']),
+                ],
               ),
-              Text(trail['Name']),
+              SizedBox(
+                width: 20,
+              ),
+              Row(children: <Widget>[
+                Text('Feedback', style: TextStyle(fontWeight: FontWeight.bold)),
+                SizedBox(
+                  width: 5.0,
+                ),
+                Text(trail['Feedback'].toString())
+              ]),
+              SizedBox(
+                width: 20,
+              ),
+              Row(children: <Widget>[
+                Text(
+                  'Completed in ',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                Text(trail['TimeToComplete'].toString() + ' min'),
+              ]),
             ],
           ),
-          SizedBox(
-            width: 20,
-          ),
-          Row(children: <Widget>[
-            Text('Feedback', style: TextStyle(fontWeight: FontWeight.bold)),
-            SizedBox(
-              width: 5.0,
-            ),
-            Text(trail['Feedback'].toString())
-          ]),
-          SizedBox(
-            width: 20,
-          ),
-          Row(children: <Widget>[
-            Text(
-              'Completed in ',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            Text(trail['TimeToComplete'].toString() + ' min'),
-            SizedBox(
-              height: 10.0,
-            ),
-          ]),
-        ],
-      ),
-      onPressed: () {},
+          onPressed: () {},
+        ),
+        
+      ],
     );
   }
 }

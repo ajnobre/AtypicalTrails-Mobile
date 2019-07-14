@@ -1,5 +1,6 @@
 import 'package:atypical/elements/drawer.dart';
 import 'package:atypical/serverApi/serverApi.dart';
+import 'package:atypical/utils/sharedpreferences.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
@@ -10,6 +11,8 @@ class MyRankingPage extends StatefulWidget {
 
 class _RankingPageState extends State<MyRankingPage> {
   List<dynamic> receivedList;
+  SharedPrefs sharedPrefs = new SharedPrefs();
+  String username = "";
   @override
   Widget build(BuildContext context) {
     var futureBuilder = new FutureBuilder(
@@ -55,21 +58,29 @@ class _RankingPageState extends State<MyRankingPage> {
     }
   }
 
-  Widget _buildRow(Map<String, dynamic> trail) {
+  Widget _buildRow(Map<String, dynamic> user, int i) {
     return FlatButton(
       child: Row(
         children: <Widget>[
           Row(
             children: <Widget>[
-              CircleAvatar(
-                backgroundColor: Colors.transparent,
-                backgroundImage: getImage(trail),
+              Text(
+                (i + 1).toString() + ".",
+                style: TextStyle(fontWeight: FontWeight.bold),
               ),
               SizedBox(
                 width: 10.0,
                 height: 2.0,
               ),
-              Text(trail['name']),
+              CircleAvatar(
+                backgroundColor: Colors.transparent,
+                backgroundImage: getImage(user),
+              ),
+              SizedBox(
+                width: 10.0,
+                height: 2.0,
+              ),
+              Text(user['name']),
             ],
           ),
           SizedBox(
@@ -80,11 +91,12 @@ class _RankingPageState extends State<MyRankingPage> {
             SizedBox(
               width: 5.0,
             ),
-            Text(trail['points'].toString())
+            Text(user['points'].toString())
           ]),
         ],
       ),
       onPressed: () {},
+      /* color: getColor(user['name']), */
     );
   }
 
@@ -96,18 +108,38 @@ class _RankingPageState extends State<MyRankingPage> {
       itemCount: rankingList.length,
       itemBuilder: (context, i) {
         if (i < rankingList.length) {
-          return _buildRow(rankingList[i]);
+          return _buildRow(rankingList[i], i);
         }
         return null;
       },
     );
   }
 
+  Future<String> getUsername() async {
+    if (username == "") {
+      String usr = await sharedPrefs.getUsername();
+      setState(() {
+        username = usr;
+      });
+    }
+    return username;
+  }
+
   ImageProvider getImage(Map<String, dynamic> trail) {
     if (trail['photo'] != null) {
       return NetworkImage(trail['photo']);
     } else {
-      return AssetImage('images/applogo.png');
+      return AssetImage('images/trailStock.png');
     }
+  }
+
+  getColor(String username) {
+    Color color = Colors.white10;
+    getUsername().then((usr) {
+      if (username == usr) {
+        color = Colors.amber[200];
+      }
+    });
+    return color;
   }
 }

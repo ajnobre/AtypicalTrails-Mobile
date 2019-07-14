@@ -140,14 +140,14 @@ class _TrailDescState extends State<TrailDesc> {
           context,
           MaterialPageRoute(
             builder: (context) => MapSample(
-                  trailKey: widget.data['CodeName'],
-                  markers: markers,
-                  polylines: polylines,
-                ),
+              trailKey: widget.data['CodeName'],
+              markers: markers,
+              polylines: polylines,
+            ),
           ),
         );
       } else {
-        _showDialog(context);
+        _showDialog(context, dist);
       }
     });
   }
@@ -227,7 +227,7 @@ class _TrailDescState extends State<TrailDesc> {
                   children: <Widget>[
                     Icon(
                       Icons.star,
-                      color: Colors.red[500],
+                      color: Colors.amber[500],
                     ),
                     Text(widget.data['Rating'].toString()),
                   ],
@@ -286,8 +286,8 @@ class _TrailDescState extends State<TrailDesc> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => CommentsPage(
-                        trailKey: widget.data['CodeName'],
-                      ),
+                    trailKey: widget.data['CodeName'],
+                  ),
                 ),
               );
             },
@@ -349,7 +349,7 @@ class _TrailDescState extends State<TrailDesc> {
   }
 }
 
-void _showDialog(context) {
+void _showDialog(context, double dist) {
   // flutter defined function
   showDialog(
     context: context,
@@ -357,7 +357,9 @@ void _showDialog(context) {
       // return object of type Dialog
       return AlertDialog(
         title: new Text("Can't initialize trail"),
-        content: new Text("You are too far away from the starting point."),
+        content: new Text("You are " +
+            (dist * 1000).round().toString() +
+            " meters away from the starting point."),
         actions: <Widget>[
           // usually buttons at the bottom of the dialog
           new FlatButton(
@@ -384,6 +386,7 @@ class StoreMap extends StatelessWidget {
     Set<Marker> markers = points[0];
     Set<Polyline> polylines = points[1];
     return GoogleMap(
+      myLocationEnabled: true,
       initialCameraPosition:
           CameraPosition(target: markers.elementAt(0).position, zoom: 17),
       markers: markers,
