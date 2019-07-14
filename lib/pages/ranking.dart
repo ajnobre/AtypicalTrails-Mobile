@@ -3,6 +3,7 @@ import 'package:atypical/serverApi/serverApi.dart';
 import 'package:atypical/utils/sharedpreferences.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_pagewise/flutter_pagewise.dart';
 
 class MyRankingPage extends StatefulWidget {
   @override
@@ -13,9 +14,10 @@ class _RankingPageState extends State<MyRankingPage> {
   List<dynamic> receivedList;
   SharedPrefs sharedPrefs = new SharedPrefs();
   String username = "";
+
   @override
   Widget build(BuildContext context) {
-    var futureBuilder = new FutureBuilder(
+/*     var futureBuilder = new FutureBuilder(
       future: _fetchData(),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         switch (snapshot.connectionState) {
@@ -29,14 +31,14 @@ class _RankingPageState extends State<MyRankingPage> {
               return createListView(context, snapshot);
         }
       },
-    );
+    ); */
     return /* WillPopScope(
       onWillPop: () async {
         return false;
       },
       child: */
         new Scaffold(
-      body: futureBuilder,
+      body: pagewise(context),
       drawer: NavigationDrawer(),
       appBar: AppBar(
         backgroundColor: Colors.green,
@@ -46,41 +48,63 @@ class _RankingPageState extends State<MyRankingPage> {
 /*     ); */
   }
 
-  Future<Response> getData(int offset) async {
-    ServerApi serverApi = new ServerApi();
-    return await serverApi.getRanking(0);
+  static const int PAGE_SIZE = 12;
+
+  Widget pagewise(BuildContext context) {
+    return PagewiseListView(
+        pageSize: PAGE_SIZE,
+        itemBuilder: this._buildRow,
+        pageFuture: (pageIndex) => _fetchData(pageIndex * PAGE_SIZE));
   }
 
-  Future _fetchData() async {
-    Response response = await getData(0);
+  Widget _itemBuilder(context, dynamic entry, _) {
+    return Column(
+      children: <Widget>[
+        ListTile(
+          leading: Icon(
+            Icons.person,
+            color: Colors.brown[200],
+          ),
+          title: Text("cena"),
+          subtitle: Text("cena"),
+        ),
+        Divider()
+      ],
+    );
+  }
+
+  Future<Response> getData(int offset) async {
+    ServerApi serverApi = new ServerApi();
+    return await serverApi.getRanking(offset);
+  }
+
+  Future<List> _fetchData(int offset) async {
+    Response response = await getData(offset);
     if (response.statusCode == 200) {
       return response.data;
     }
   }
 
-  Widget _buildRow(Map<String, dynamic> user, int i) {
+  Widget _buildRow(context, dynamic entry, _) {
     return FlatButton(
       child: Row(
         children: <Widget>[
           Row(
             children: <Widget>[
-              Text(
-                (i + 1).toString() + ".",
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
+/* s */
               SizedBox(
                 width: 10.0,
                 height: 2.0,
               ),
               CircleAvatar(
                 backgroundColor: Colors.transparent,
-                backgroundImage: getImage(user),
+                backgroundImage: getImage(entry),
               ),
               SizedBox(
                 width: 10.0,
                 height: 2.0,
               ),
-              Text(user['name']),
+              Text(entry['name']),
             ],
           ),
           SizedBox(
@@ -91,7 +115,7 @@ class _RankingPageState extends State<MyRankingPage> {
             SizedBox(
               width: 5.0,
             ),
-            Text(user['points'].toString())
+            Text(entry['points'].toString())
           ]),
         ],
       ),
@@ -99,7 +123,7 @@ class _RankingPageState extends State<MyRankingPage> {
       /* color: getColor(user['name']), */
     );
   }
-
+/* 
   Widget createListView(BuildContext context, AsyncSnapshot snapshot) {
     List<dynamic> rankingList = snapshot.data;
 
@@ -113,7 +137,7 @@ class _RankingPageState extends State<MyRankingPage> {
         return null;
       },
     );
-  }
+  } */
 
   Future<String> getUsername() async {
     if (username == "") {
