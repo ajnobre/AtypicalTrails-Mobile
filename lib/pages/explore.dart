@@ -4,6 +4,7 @@ import 'package:atypical/pages/traildescriptor.dart';
 import 'package:atypical/serverApi/serverApi.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_pagewise/flutter_pagewise.dart';
 
 class ExplorePage extends StatefulWidget {
   final String username;
@@ -35,7 +36,7 @@ class _ExploreContentState extends State<ExploreContent> {
 
   @override
   Widget build(BuildContext context) {
-    var futureBuilder = new FutureBuilder(
+/*     var futureBuilder = new FutureBuilder(
       future: _getData(),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         switch (snapshot.connectionState) {
@@ -50,13 +51,13 @@ class _ExploreContentState extends State<ExploreContent> {
                   context, snapshot) /* createListView(context, snapshot) */;
         }
       },
-    );
+    ); */
     return WillPopScope(
       onWillPop: () async {
         return false;
       },
       child: new Scaffold(
-        body: futureBuilder,
+        body: pagewise(context),
         drawer: NavigationDrawer(),
         appBar: AppBar(
           backgroundColor: Colors.green,
@@ -64,6 +65,75 @@ class _ExploreContentState extends State<ExploreContent> {
           actions: <Widget>[],
         ),
       ),
+    );
+  }
+
+  Widget _itemBuilder(context, dynamic entry, _) {
+    Map<String, dynamic> map = entry['propertyMap'];
+    return FlatButton(
+      child: Container(
+        
+          decoration: BoxDecoration(
+            borderRadius: new BorderRadius.circular(8.0),
+            border: Border.all(color: Colors.grey[600]),
+          ),
+          child: Column(
+            
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: new BorderRadius.circular(8.0),
+                      color: Colors.grey[200],
+                      image: DecorationImage(
+                          colorFilter: new ColorFilter.mode(
+                              Colors.amber.withOpacity(0.16),
+                              BlendMode.srcATop),
+                          image: imageBuilder(map['Photo']),
+                          fit: BoxFit.fill),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 8.0),
+                Expanded(
+                  child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8.0),
+                      child: SizedBox(
+                          height: 30.0,
+                          child: SingleChildScrollView(
+                              child: Text(map['Name'],
+                                  style: TextStyle(fontSize: 12.0))))),
+                ),
+                SizedBox(height: 8.0),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Text(
+                    map['Description'],
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
+                SizedBox(height: 8.0)
+              ])),
+      onPressed: () {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => TrailDesc(data: map)));
+      },
+    );
+  }
+
+  static const int PAGE_SIZE = 12;
+  Widget pagewise(BuildContext context) {
+    return PagewiseGridView.count(
+      pageSize: PAGE_SIZE,
+      crossAxisCount: 2,
+      mainAxisSpacing: 8.0,
+      crossAxisSpacing: 8.0,
+      childAspectRatio: 0.555,
+      padding: EdgeInsets.all(0.0),
+      itemBuilder: this._itemBuilder,
+      pageFuture: (pageIndex) => _fetchData(pageIndex * PAGE_SIZE),
     );
   }
 
@@ -82,7 +152,19 @@ class _ExploreContentState extends State<ExploreContent> {
     );
   }
 
-  Future<dynamic> _getData() async {
+  Future<Response> getData(int offset) async {
+    ServerApi serverApi = new ServerApi();
+    return await serverApi.getAllTrails(offset);
+  }
+
+  Future<List> _fetchData(int offset) async {
+    Response response = await getData(offset);
+    if (response.statusCode == 200) {
+      return response.data;
+    }
+  }
+
+/*   Future<dynamic> _getData(int offset) async {
     List<dynamic> values, values1, values2;
     values = await _submit(0);
     values1 = await _submit(12);
@@ -99,7 +181,7 @@ class _ExploreContentState extends State<ExploreContent> {
       return receivedList;
     }
   }
-
+ */
 /*   Widget createListView(BuildContext context, AsyncSnapshot snapshot) {
     List<dynamic> trailList = snapshot.data;
     return ListView.builder(
@@ -167,8 +249,8 @@ class _ExploreContentState extends State<ExploreContent> {
     if (url != null) {
       image = NetworkImage(url);
     }
-
-    return Container(
+    return image;
+    /*  return Container(
       foregroundDecoration: new BoxDecoration(
         image: DecorationImage(image: image, fit: BoxFit.cover),
       ),
@@ -181,6 +263,6 @@ class _ExploreContentState extends State<ExploreContent> {
       ), */
       alignment: Alignment.bottomCenter,
       padding: EdgeInsets.only(bottom: 20),
-    );
+    ); */
   }
 }

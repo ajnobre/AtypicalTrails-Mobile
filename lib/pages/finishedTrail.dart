@@ -41,17 +41,6 @@ class _FinishTrailPageState extends State<FinishTrailPage> {
           child: Center(
             child: ListView(
               children: <Widget>[
-                Form(
-                  key: _formKey,
-                  child: TextField(
-                    controller: commentController,
-                    autofocus: true,
-                    maxLines: 15,
-                    decoration: InputDecoration(
-                        helperText: 'Comment', border: OutlineInputBorder()),
-                  ),
-                ),
-                const SizedBox(height: 30),
                 Center(
                   child: SmoothStarRating(
                       allowHalfRating: false,
@@ -67,6 +56,17 @@ class _FinishTrailPageState extends State<FinishTrailPage> {
                       borderColor: Colors.green,
                       spacing: 0.0),
                 ),
+                Form(
+                  key: _formKey,
+                  child: TextField(
+                    controller: commentController,
+                    autofocus: true,
+                    maxLines: 15,
+                    decoration: InputDecoration(
+                        helperText: 'Comment', border: OutlineInputBorder()),
+                  ),
+                ),
+                const SizedBox(height: 30),
                 const SizedBox(height: 30),
                 RaisedButton(
                   onPressed: _submit,

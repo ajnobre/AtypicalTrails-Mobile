@@ -53,10 +53,9 @@ class _CommentsPageState extends State<CommentsPage> {
 
   Widget createListView(BuildContext context, AsyncSnapshot snapshot) {
     List<dynamic> trailList = snapshot.data;
-    if (trailList == null) {
+    if (trailList.isEmpty) {
       return Container(
-        height: 0,
-        width: 0,
+        child: Center(child: Text("This trail doesn't have any comments yet")),
       );
     } else
       return Column(
@@ -90,8 +89,6 @@ class _CommentsPageState extends State<CommentsPage> {
               ),
             ],
           ),
-
-
           Wrap(children: <Widget>[getText(trail['Comment'])]),
           SizedBox(
             width: 20,

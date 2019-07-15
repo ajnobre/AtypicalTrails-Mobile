@@ -55,10 +55,9 @@ class _TrailsDoneState extends State<TrailsDone> {
 
   Widget createListView(BuildContext context, AsyncSnapshot snapshot) {
     List<dynamic> trailList = snapshot.data;
-    if (trailList == null) {
+    if (trailList.isEmpty) {
       return Container(
-        height: 0,
-        width: 0,
+        child: Center(child: Text("You haven't made any trail yet")),
       );
     } else
       return ListView.builder(
@@ -113,7 +112,6 @@ class _TrailsDoneState extends State<TrailsDone> {
           ),
           onPressed: () {},
         ),
-        
       ],
     );
   }
