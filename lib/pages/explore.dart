@@ -30,28 +30,11 @@ class _ExploreContentState extends State<ExploreContent> {
   Response response;
   final _suggestions = <Text>[];
   final _contents = <Map<String, dynamic>>[];
-  final _biggerFont = const TextStyle(fontSize: 18.0, color: Colors.white);
   List<dynamic> receivedList;
   ServerApi serverApi = new ServerApi();
 
   @override
   Widget build(BuildContext context) {
-/*     var futureBuilder = new FutureBuilder(
-      future: _getData(),
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        switch (snapshot.connectionState) {
-          case ConnectionState.none:
-          case ConnectionState.waiting:
-            return Center(child: new CircularProgressIndicator());
-          default:
-            if (snapshot.hasError)
-              return new Text('Error: ${snapshot.error}');
-            else
-              return createGridView(
-                  context, snapshot) /* createListView(context, snapshot) */;
-        }
-      },
-    ); */
     return WillPopScope(
       onWillPop: () async {
         return false;
@@ -72,13 +55,12 @@ class _ExploreContentState extends State<ExploreContent> {
     Map<String, dynamic> map = entry['propertyMap'];
     return FlatButton(
       child: Container(
-        
           decoration: BoxDecoration(
+            color: Colors.amber[100],
             borderRadius: new BorderRadius.circular(8.0),
-            border: Border.all(color: Colors.grey[600]),
+            border: Border.all(color: Colors.grey[300]),
           ),
           child: Column(
-            
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -104,14 +86,16 @@ class _ExploreContentState extends State<ExploreContent> {
                           height: 30.0,
                           child: SingleChildScrollView(
                               child: Text(map['Name'],
-                                  style: TextStyle(fontSize: 12.0))))),
+                                  style: TextStyle(
+                                      fontSize: 18.0,
+                                      fontWeight: FontWeight.bold))))),
                 ),
                 SizedBox(height: 8.0),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 8.0),
                   child: Text(
                     map['Description'],
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    /* style: TextStyle(fontWeight: FontWeight.bold), */
                   ),
                 ),
                 SizedBox(height: 8.0)
@@ -137,21 +121,6 @@ class _ExploreContentState extends State<ExploreContent> {
     );
   }
 
-  Widget _buildRow(Map<String, dynamic> trail) {
-    return FlatButton(
-      child: ListTile(
-        title: Text(
-          trail['Name'],
-          style: _biggerFont,
-        ),
-      ),
-      onPressed: () {
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => TrailDesc(data: trail)));
-      },
-    );
-  }
-
   Future<Response> getData(int offset) async {
     ServerApi serverApi = new ServerApi();
     return await serverApi.getAllTrails(offset);
@@ -164,48 +133,11 @@ class _ExploreContentState extends State<ExploreContent> {
     }
   }
 
-/*   Future<dynamic> _getData(int offset) async {
-    List<dynamic> values, values1, values2;
-    values = await _submit(0);
-    values1 = await _submit(12);
-    values2 = await _submit(24);
-    values.addAll(values1);
-    values.addAll(values2);
-    return values;
-  }
-
-  Future _submit(int offset) async {
-    response = await serverApi.getAllTrails(offset);
-    if (response.statusCode == 200) {
-      receivedList = response.data;
-      return receivedList;
-    }
-  }
- */
-/*   Widget createListView(BuildContext context, AsyncSnapshot snapshot) {
-    List<dynamic> trailList = snapshot.data;
-    return ListView.builder(
-      padding: const EdgeInsets.all(16.0),
-      itemCount: trailList.length,
-      itemBuilder: (context, i) {
-        if (i >= _suggestions.length) {
-          if (i < trailList.length) {
-            _contents.add(trailList[i]['propertyMap']);
-          }
-        }
-        if (i < trailList.length) {
-          return _buildRow(_contents[i]);
-        }
-        return null;
-      },
-    );
-  } */
-
   Widget createGridView(BuildContext context, AsyncSnapshot snapshot) {
     List<dynamic> trailList = snapshot.data;
     return GridView.builder(
       gridDelegate: new SliverGridDelegateWithMaxCrossAxisExtent(
-          maxCrossAxisExtent: 200,
+          maxCrossAxisExtent: 200.0,
           mainAxisSpacing: 0.0,
           crossAxisSpacing: 0.0,
           childAspectRatio: 0.85),
@@ -217,7 +149,7 @@ class _ExploreContentState extends State<ExploreContent> {
           }
         }
         if (i < trailList.length) {
-          return _buildButton(_contents[i]) /* _buildRow(_contents[i]) */;
+          return _buildButton(_contents[i]);
         }
         return null;
       },
@@ -250,19 +182,5 @@ class _ExploreContentState extends State<ExploreContent> {
       image = NetworkImage(url);
     }
     return image;
-    /*  return Container(
-      foregroundDecoration: new BoxDecoration(
-        image: DecorationImage(image: image, fit: BoxFit.cover),
-      ),
-/*       decoration: const BoxDecoration(
-        image: DecorationImage(
-            alignment: Alignment(-.2, 0),
-            image: NetworkImage(
-                'http://www.naturerights.com/blog/wp-content/uploads/2017/12/Taranaki-NR-post-1170x550.png'),
-            fit: BoxFit.cover),
-      ), */
-      alignment: Alignment.bottomCenter,
-      padding: EdgeInsets.only(bottom: 20),
-    ); */
   }
 }

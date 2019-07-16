@@ -61,7 +61,7 @@ class _FinishTrailPageState extends State<FinishTrailPage> {
                   child: TextField(
                     controller: commentController,
                     autofocus: true,
-                    maxLines: 15,
+                    maxLines: 8,
                     decoration: InputDecoration(
                         helperText: 'Comment', border: OutlineInputBorder()),
                   ),
