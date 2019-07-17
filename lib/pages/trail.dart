@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:flutter/services.dart';
+import 'package:giffy_dialog/giffy_dialog.dart';
 
 class MapSample extends StatefulWidget {
   final Set<Marker> markers;
@@ -23,8 +24,6 @@ class MapSampleState extends State<MapSample> {
   double _sliderValue = 12.0;
   static double zoomCons = 30.0;
   MapType _currentMapType = MapType.normal;
-
-
 
   static LocationData currentLocation;
   static LatLng startPosition, finishPosition;
@@ -177,6 +176,33 @@ class MapSampleState extends State<MapSample> {
 
   void _showDialogSuccess(context) {
     showDialog(
+        context: context,
+        builder: (_) => NetworkGiffyDialog(
+              onlyOkButton: true,
+              image: Image.asset(
+                "images/success.gif",
+                fit: BoxFit.cover,
+              ),
+              title: Text(
+                'Well done',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.w600),
+              ),
+              description: Text(
+                'You have reached your destination.',
+                textAlign: TextAlign.center,
+              ),
+              onOkButtonPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => FinishTrailPage(
+                              time: getTime(),
+                              trailKey: widget.trailKey,
+                            )));
+              },
+            ));
+/*     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
@@ -198,7 +224,7 @@ class MapSampleState extends State<MapSample> {
           ],
         );
       },
-    );
+    ); */
   }
 
   Future<void> changeValue(double value) async {

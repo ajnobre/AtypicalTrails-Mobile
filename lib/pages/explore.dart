@@ -54,6 +54,7 @@ class _ExploreContentState extends State<ExploreContent> {
   Widget _itemBuilder(context, dynamic entry, _) {
     Map<String, dynamic> map = entry['propertyMap'];
     return FlatButton(
+      padding: EdgeInsets.all(8),
       child: Container(
           decoration: BoxDecoration(
             color: Colors.amber[100],
@@ -112,8 +113,8 @@ class _ExploreContentState extends State<ExploreContent> {
     return PagewiseGridView.count(
       pageSize: PAGE_SIZE,
       crossAxisCount: 2,
-      mainAxisSpacing: 8.0,
-      crossAxisSpacing: 8.0,
+      mainAxisSpacing: 10.0,
+      crossAxisSpacing: 0.0,
       childAspectRatio: 0.555,
       padding: EdgeInsets.all(0.0),
       itemBuilder: this._itemBuilder,
@@ -158,6 +159,7 @@ class _ExploreContentState extends State<ExploreContent> {
 
   Widget _buildButton(Map<String, dynamic> trail) {
     return FlatButton(
+      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       child: Stack(
         children: <Widget>[
           imageBuilder(trail['Photo']),

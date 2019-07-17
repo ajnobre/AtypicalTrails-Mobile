@@ -7,6 +7,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 import 'package:smooth_star_rating/smooth_star_rating.dart';
+import 'package:giffy_dialog/giffy_dialog.dart';
 
 class FinishTrailPage extends StatefulWidget {
   final int time;
@@ -61,7 +62,7 @@ class _FinishTrailPageState extends State<FinishTrailPage> {
                   child: TextField(
                     controller: commentController,
                     autofocus: true,
-                    maxLines: 8,
+                    maxLines: 4,
                     decoration: InputDecoration(
                         helperText: 'Comment', border: OutlineInputBorder()),
                   ),

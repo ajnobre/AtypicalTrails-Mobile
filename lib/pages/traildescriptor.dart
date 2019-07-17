@@ -135,7 +135,7 @@ class _TrailDescState extends State<TrailDesc> {
           currentLocation.longitude,
           startPosition.latitude,
           startPosition.longitude);
-      if (dist < 0.03) {
+      if (dist < 0.035) {
         return Navigator.push(
           context,
           MaterialPageRoute(

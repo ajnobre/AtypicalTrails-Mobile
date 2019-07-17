@@ -86,41 +86,51 @@ class _RankingPageState extends State<MyRankingPage> {
   }
 
   Widget _buildRow(context, dynamic entry, _) {
-    return FlatButton(
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.amber[100],
+        borderRadius: new BorderRadius.circular(8.0),
+        border: Border.all(color: Colors.grey[300]),
+      ),
       child: Row(
         children: <Widget>[
-          Row(
-            children: <Widget>[
-/* s */
-              SizedBox(
-                width: 10.0,
-                height: 2.0,
-              ),
-              CircleAvatar(
-                backgroundColor: Colors.transparent,
-                backgroundImage: getImage(entry),
-              ),
-              SizedBox(
-                width: 10.0,
-                height: 2.0,
-              ),
-              Text(entry['name']),
-            ],
-          ),
-          SizedBox(
-            width: 20,
-          ),
-          Row(children: <Widget>[
-            Text('Points'),
-            SizedBox(
-              width: 5.0,
+          Expanded(
+            child: Column(
+              children: <Widget>[
+                SizedBox(
+                  width: 10.0,
+                  height: 2.0,
+                ),
+                CircleAvatar(
+                  backgroundColor: Colors.transparent,
+                  backgroundImage: getImage(entry),
+                ),
+                SizedBox(
+                  width: 10.0,
+                  height: 2.0,
+                ),
+                Text(entry['name']),
+              ],
             ),
-            Text(entry['points'].toString())
-          ]),
+          ),
+          Expanded(
+            child: Column(
+              children: <Widget>[
+                SizedBox(
+                  width: 20,
+                ),
+                Row(children: <Widget>[
+                  Text('Points'),
+                  SizedBox(
+                    width: 5.0,
+                  ),
+                  Text(entry['points'].toString())
+                ]),
+              ],
+            ),
+          )
         ],
       ),
-      onPressed: () {},
-      /* color: getColor(user['name']), */
     );
   }
 /* 

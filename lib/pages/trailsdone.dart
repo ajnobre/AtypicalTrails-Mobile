@@ -5,6 +5,7 @@ import 'package:atypical/utils/sharedpreferences.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
+
 class TrailsDone extends StatefulWidget {
   @override
   _TrailsDoneState createState() => _TrailsDoneState();
